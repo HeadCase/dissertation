@@ -73,6 +73,5 @@ list(DG.predecessors(1))
 list(DG.successors(1))
 
 
-nx.draw(G, with_labels=True)
-nx.draw(DG, with_labels=True)
-# nx.draw(H)
+nx.draw(G, with_labels=True, node_size=800)
+# nx.draw(DG, with_labels=True)
