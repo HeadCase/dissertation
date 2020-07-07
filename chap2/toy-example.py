@@ -11,6 +11,9 @@ introductory MCMC chapter
 # Imports
 import networkx as nx
 from copy import deepcopy as dc
+from random import randint as rint
+from random import uniform
+import matplotlib.pyplot as plt
 
 # Initialise starting graph. 6x6 for 36 voting blocks (nodes), into which we
 # will put an average of 25 persons for a total voting population of 900. Each
@@ -100,7 +103,7 @@ for nodes, attrs in S.nodes(data=True):
 # Graphing
 
 
-def draw(graph):
+def draw(graph, fname):
     """Function to parse graph and plot it"""
 
     colour = []
@@ -114,11 +117,117 @@ def draw(graph):
     )
     e = nx.draw_networkx_edges(graph, pos, with_labels=True)
     l = nx.draw_networkx_labels(graph, pos)
+    plt.savefig("imgs/{}.pdf".format(fname))
 
 
-S2 = dc(S)
-S2.nodes[1]["dist"] = 1
-draw(S2)
+def candidates(graph):
+    """ Proposal function for random walk """
+
+    # Acquire source node from which to walk, using a while loop to condition
+    # the number of nodes in the source node's district
+    sourceNode = 0
+    while sourceNode == 0:
+        sourceNode = rint(1, 36)
+        srcNodeDistr = graph.nodes[sourceNode]["dist"]
+        nodes_in_src_distr = [
+            node
+            for node, attrs in graph.nodes(data=True)
+            if attrs["dist"] == srcNodeDistr
+        ]
+        if len(nodes_in_src_distr) < 5 or 7 < len(nodes_in_src_distr):
+            sourceNode = 0
+
+    # Get neighbors to that node
+    neighbors = [n for n in graph.neighbors(sourceNode)]
+
+    candNodes = []
+    while candNodes == []:
+        # Get neighboring nodes which belong to another district, i.e.
+        # candidates for district swap
+        candNodes = [
+            n
+            for n in neighbors
+            if graph.nodes[n]["dist"] != graph.nodes[sourceNode]["dist"]
+        ]
+
+        # In order to preserve all six districts and minimise districting
+        # plans with imbalanced populations, we restrict candidate nodes to
+        # have between five and seven nodes
+        if candNodes:
+            for node in candNodes:
+                nodeDist = graph.nodes[node]["dist"]
+                print("Node district: {}".format(nodeDist))
+                nodes_in_dist = [
+                    node
+                    for node, attrs in graph.nodes(data=True)
+                    if attrs["dist"] == nodeDist
+                ]
+                print("Num. nodes in district: {}".format(len(nodes_in_dist)))
+                if len(nodes_in_dist) < 5 or 7 < len(nodes_in_dist):
+                    candNodes.remove(node)
+
+    return sourceNode, candNodes
+
+
+# S2 = dc(S)
+# S2.nodes[9]['dist'] = 4
+print(candidates(S2))
+
+
+# Markov Chain Simulation
+def chain(graph, n):
+    """ Markov chain function"""
+
+    # While loop to control number of iterations
+    i = 0
+    plans = [graph]
+    while i < n:
+        # Candidates reset to null at start of each loop
+        candNodes = []
+        sourceNode = 0
+
+        # Get proposal node for potential district change. candidates()
+        # function can return empty list (node that has no neighbours from
+        # other districts), so we loop until we get a non-empty list
+        while candNodes == []:
+            sourceNode, candNodes = candidates(graph)
+
+        if len(candNodes) > 1:
+            pick = rint(0, len(candNodes) - 1)
+            proposal = candNodes[pick]
+        else:
+            proposal = candNodes[0]
+
+        score_source = graph.nodes[sourceNode]["pop"]
+        q_source = 1 / len(graph.adj[sourceNode])
+        score_prop = graph.nodes[proposal]["pop"]
+        q_prop = 1 / len(graph.adj[proposal])
+
+        # a = (score_prop / score_source) * (q_prop / q_source)
+        # print(a)
+        alpha = min(1, (score_prop / score_source) * (q_prop / q_source))
+        beta = uniform(0.5, 1)
+
+        if alpha > beta:
+            update = dc(graph)
+            update.nodes[proposal]["dist"] = update.nodes[sourceNode]["dist"]
+            graph = update
+            plans.append(graph)
+
+        i += 1
+
+    return plans
+
+
+plans = chain(S, 50)
+
+count = 1
+for i in range(0, 8):
+    draw(plans[i], "plan-{}".format(count))
+    count += 1
+
+
+len(S.adj[4])
 
 ############
 # Snippets #
