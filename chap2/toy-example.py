@@ -100,24 +100,9 @@ total_pop = 0
 for nodes, attrs in S.nodes(data=True):
     total_pop += attrs["pop"]
 
-# Graphing
-
-
-def draw(graph, fname):
-    """Function to parse graph and plot it"""
-
-    colour = []
-    pos = S.graph["position"]
-
-    for node in graph.nodes():
-        colour.append(graph.nodes[node]["dist"])
-
-    n = nx.draw_networkx_nodes(
-        graph, pos, node_color=colour, node_size=700, with_labels=True
-    )
-    e = nx.draw_networkx_edges(graph, pos, with_labels=True)
-    l = nx.draw_networkx_labels(graph, pos)
-    plt.savefig("imgs/{}.pdf".format(fname))
+S2 = dc(S)
+S2.nodes[9]["dist"] = 4
+S2.nodes[8]["dist"] = 4
 
 
 def candidates(graph):
@@ -125,23 +110,21 @@ def candidates(graph):
 
     # Acquire source node from which to walk, using a while loop to condition
     # the number of nodes in the source node's district
-    sourceNode = 0
-    while sourceNode == 0:
-        sourceNode = rint(1, 36)
-        srcNodeDistr = graph.nodes[sourceNode]["dist"]
-        nodes_in_src_distr = [
-            node
-            for node, attrs in graph.nodes(data=True)
-            if attrs["dist"] == srcNodeDistr
-        ]
-        if len(nodes_in_src_distr) < 5 or 7 < len(nodes_in_src_distr):
-            sourceNode = 0
-
-    # Get neighbors to that node
-    neighbors = [n for n in graph.neighbors(sourceNode)]
 
     candNodes = []
     while candNodes == []:
+
+        sourceNode = 0
+        while sourceNode == 0:
+            sourceNode = rint(1, 36)
+            # print('Proposed source node: {}'.format(sourceNode))
+            if not distr_threshold(sourceNode, graph):
+                # print("Node {}'s district has too many nodes".format(sourceNode))
+                sourceNode = 0
+
+        # Get neighbors to that node
+        neighbors = [n for n in graph.neighbors(sourceNode)]
+
         # Get neighboring nodes which belong to another district, i.e.
         # candidates for district swap
         candNodes = [
@@ -150,28 +133,36 @@ def candidates(graph):
             if graph.nodes[n]["dist"] != graph.nodes[sourceNode]["dist"]
         ]
 
+        # print('Proposed candidate node(s): {}'.format(candNodes))
+
         # In order to preserve all six districts and minimise districting
         # plans with imbalanced populations, we restrict candidate nodes to
         # have between five and seven nodes
         if candNodes:
             for node in candNodes:
-                nodeDist = graph.nodes[node]["dist"]
-                print("Node district: {}".format(nodeDist))
-                nodes_in_dist = [
-                    node
-                    for node, attrs in graph.nodes(data=True)
-                    if attrs["dist"] == nodeDist
-                ]
-                print("Num. nodes in district: {}".format(len(nodes_in_dist)))
-                if len(nodes_in_dist) < 5 or 7 < len(nodes_in_dist):
+                if not distr_threshold(node, graph):
+                    # print('Candidate {} removed'.format(node))
                     candNodes.remove(node)
 
     return sourceNode, candNodes
 
 
-# S2 = dc(S)
-# S2.nodes[9]['dist'] = 4
-print(candidates(S2))
+def distr_threshold(node, graph):
+    """ Determine if a supplied district has too many or too few nodes """
+    distr = graph.nodes[node]["dist"]
+    nodes_in_dist = [
+        node for node, attrs in graph.nodes(data=True) if attrs["dist"] == distr
+    ]
+    node_count = len(nodes_in_dist)
+    if node_count > 7 or node_count < 5:
+        # print("False: {} in district".format(node_count))
+        return False
+    else:
+        # print("True: {} in district".format(node_count))
+        return True
+
+
+candidates(S2)
 
 
 # Markov Chain Simulation
@@ -180,6 +171,8 @@ def chain(graph, n):
 
     # While loop to control number of iterations
     i = 0
+
+    # Place initial graph at the start of list of graphs output by the chain
     plans = [graph]
     while i < n:
         # Candidates reset to null at start of each loop
@@ -189,37 +182,61 @@ def chain(graph, n):
         # Get proposal node for potential district change. candidates()
         # function can return empty list (node that has no neighbours from
         # other districts), so we loop until we get a non-empty list
-        while candNodes == []:
-            sourceNode, candNodes = candidates(graph)
-
+        # while candNodes == []:
+        sourceNode, candNodes = candidates(graph)
         if len(candNodes) > 1:
             pick = rint(0, len(candNodes) - 1)
             proposal = candNodes[pick]
         else:
             proposal = candNodes[0]
 
+        print("Graph source validity: {}".format(distr_threshold(sourceNode, graph)))
+        print("Graph proposal validity: {}".format(distr_threshold(proposal, graph)))
+        print("--------------------------")
+
+        # print(
+        #     "Source node ({}) validity: {}, Candidate node ({}) validity: {}".format(
+        #         sourceNode,
+        #         distr_threshold(sourceNode, graph),
+        #         proposal,
+        #         distr_threshold(proposal, graph),
+        #     )
+        # )
+
         score_source = graph.nodes[sourceNode]["pop"]
         q_source = 1 / len(graph.adj[sourceNode])
         score_prop = graph.nodes[proposal]["pop"]
         q_prop = 1 / len(graph.adj[proposal])
 
-        # a = (score_prop / score_source) * (q_prop / q_source)
-        # print(a)
         alpha = min(1, (score_prop / score_source) * (q_prop / q_source))
         beta = uniform(0.5, 1)
 
         if alpha > beta:
             update = dc(graph)
+            print(
+                "Update source validity: {}".format(distr_threshold(sourceNode, update))
+            )
+            print(
+                "Update proposal validity: {}".format(distr_threshold(proposal, update))
+            )
+            print("--------------------------")
             update.nodes[proposal]["dist"] = update.nodes[sourceNode]["dist"]
             graph = update
             plans.append(graph)
 
+        print("End of iteration {}".format(i))
         i += 1
 
     return plans
 
 
-plans = chain(S, 50)
+src, candi = candidates(S2)
+print(distr_threshold(src, S2))
+for i in candi:
+    print(distr_threshold(i, S2))
+
+plans = chain(S, 15)
+draw(plans[41])
 
 count = 1
 for i in range(0, 8):
@@ -229,6 +246,26 @@ for i in range(0, 8):
 
 len(S.adj[4])
 
+
+# Graphing
+def draw(graph, fname=None):
+    """Function to parse graph and plot it"""
+
+    colour = []
+    pos = S.graph["position"]
+
+    for node in graph.nodes():
+        colour.append(graph.nodes[node]["dist"])
+
+    nx.draw_networkx_nodes(
+        graph, pos, node_color=colour, node_size=700, with_labels=True
+    )
+    nx.draw_networkx_edges(graph, pos, with_labels=True)
+    nx.draw_networkx_labels(graph, pos)
+    if fname:
+        plt.savefig("imgs/{}.pdf".format(fname))
+
+
 ############
 # Snippets #
 ############
@@ -236,3 +273,14 @@ len(S.adj[4])
 # Get nodes for a given district. Can be modified for selecting nodes based on
 # any node attribute
 dist1 = [node for node, attrs in S.nodes(data=True) if attrs["dist"] == 1]
+
+# nodeDist = graph.nodes[node]["dist"]
+# # print("Node district: {}".format(nodeDist))
+# nodes_in_dist = [
+#     node
+#     for node, attrs in graph.nodes(data=True)
+#     if attrs["dist"] == nodeDist
+# ]
+# # print("Num. nodes in district: {}".format(len(nodes_in_dist)))
+# if len(nodes_in_dist) < 5 or 7 < len(nodes_in_dist):
+#     candNodes.remove(node)
