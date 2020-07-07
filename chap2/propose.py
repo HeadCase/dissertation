@@ -10,21 +10,31 @@ def candidates(graph):
 
     # Acquire source node from which to walk, using a while loop to condition
     # the number of nodes in the source node's district
+    sourceNode = get_source(graph)
+    proposalNode = get_proposal(sourceNode, graph)
 
+    return sourceNode, proposalNode
+
+
+def get_source(graph):
+    sourceNode = 0
+    while sourceNode == 0:
+        sourceNode = rint(1, 36)
+        if not distr_threshold(sourceNode, graph):
+            sourceNode = 0
+
+    return sourceNode
+
+
+def get_proposal(sourceNode, graph):
+    proposalNode = 0
     candNodes = []
-    while candNodes == []:
 
-        sourceNode = 0
-        while sourceNode == 0:
-            sourceNode = rint(1, 36)
-            # print('Proposed source node: {}'.format(sourceNode))
-            if not distr_threshold(sourceNode, graph):
-                # print("Node {}'s district has too many
-                # nodes".format(sourceNode))
-                sourceNode = 0
+    __import__("pdb").set_trace()
+    while proposalNode == 0:
 
         # Get neighbors to that node
-        neighbors = [n for n in graph.neighbors(sourceNode)]
+        neighbors = list(graph.neighbors(sourceNode))
 
         # Get neighboring nodes which belong to another district, i.e.
         # candidates for district swap
@@ -34,30 +44,30 @@ def candidates(graph):
             if graph.nodes[n]["dist"] != graph.nodes[sourceNode]["dist"]
         ]
 
-        # print('Proposed candidate node(s): {}'.format(candNodes))
-
         # In order to preserve all six districts and minimise districting
         # plans with imbalanced populations, we restrict candidate nodes to
         # have between five and seven nodes
         if candNodes:
             for node in candNodes:
                 if not distr_threshold(node, graph):
-                    # print('Candidate {} removed'.format(node))
                     candNodes.remove(node)
+            if len(candNodes) > 1:
+                pick = rint(0, len(candNodes) - 1)
+                proposalNode = candNodes[pick]
+            elif len(candNodes) == 1:
+                proposalNode = candNodes[0]
 
-    return sourceNode, candNodes
+    return proposalNode
 
 
 def distr_threshold(node, graph):
     """ Determine if a supplied district has too many or too few nodes """
     distr = graph.nodes[node]["dist"]
-    nodes_in_dist = [
-        node for node, attrs in graph.nodes(data=True) if attrs["dist"] == distr
-    ]
-    node_count = len(nodes_in_dist)
-    if node_count > 7 or node_count < 5:
-        # print("False: {} in district".format(node_count))
+    node_count = 0
+    for node, attrs in graph.nodes(data=True):
+        if attrs["dist"] == distr:
+            node_count += 1
+    if node_count <= 5:
         return False
     else:
-        # print("True: {} in district".format(node_count))
         return True
