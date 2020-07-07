@@ -84,7 +84,3 @@ def init_graph():
     gname.graph["position"] = pos
 
     return gname
-
-    # S2 = dc(S)
-    # S2.nodes[9]["dist"] = 4
-    # S2.nodes[8]["dist"] = 4
