@@ -4,7 +4,6 @@
 from copy import deepcopy as dc
 from random import uniform
 from propose import candidates
-from propose import distr_threshold
 
 
 # Markov Chain Simulation
@@ -12,23 +11,14 @@ def chain(graph, n):
     """ Markov chain function"""
 
     # While loop to control number of iterations
-    i = 0
+    i = 1
 
     # Place initial graph at the start of list of graphs output by the chain
     plans = [graph]
     while i < n:
-        # Candidates reset to null at start of each loop
-        # candNodes = []
-        # sourceNode = 0
-        print(id(graph))
 
         sourceNode, proposalNode = candidates(graph)
         srcDistr = graph.nodes[sourceNode]["dist"]
-        print(
-            "Validity src: {}, Validity prp: {}".format(
-                distr_threshold(sourceNode, graph), distr_threshold(proposalNode, graph)
-            )
-        )
 
         score_source = graph.nodes[sourceNode]["pop"]
         q_source = 1 / len(graph.adj[sourceNode])
@@ -44,7 +34,7 @@ def chain(graph, n):
             graph = update
             plans.append(graph)
 
+        print("------ End iteration {} ------".format(i))
         i += 1
-        # print("End of iteration {}".format(i))
 
     return plans
