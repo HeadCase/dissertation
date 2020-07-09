@@ -5,21 +5,17 @@
 from init import init_graph
 from reject import reject_islands
 from reject import reject_by_pop
-from copy import deepcopy as dc
 from draw import draw
 from chain import chain
+
+# from copy import deepcopy as dc
 
 
 def main():
     """ Main function """
 
     S = init_graph()
-
-    # plans = [S]
-    # S2 = dc(S)
-    # S2.nodes[26]["distr"] = 1
-    # plans.append(S2)
-    plans = chain(S, 1000)
+    plans = chain(S, 10000)
     contiguous, reject = reject_islands(plans)
     clean, reject2 = reject_by_pop(contiguous)
     reject.extend(reject2)
@@ -30,10 +26,14 @@ def main():
 
     count = 1
     for i in clean:
-        draw(i, "refactor2-clean-plans{}".format(count))
+        draw(i, "meeting-test-clean-plans{}".format(count))
         print("------ Clean plan {} drawn ------".format(count))
         count += 1
 
+    # plans = [S]
+    # S2 = dc(S)
+    # S2.nodes[26]["distr"] = 1
+    # plans.append(S2)
     # count = 1
     # for i in reject:
     #     draw(i, "reject-plans{}".format(count))
