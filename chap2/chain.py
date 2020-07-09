@@ -18,7 +18,7 @@ def chain(graph, n):
     while i < n:
 
         sourceNode, proposalNode = candidates(graph)
-        srcDistr = graph.nodes[sourceNode]["dist"]
+        srcDistr = graph.nodes[sourceNode]["distr"]
 
         score_source = graph.nodes[sourceNode]["pop"]
         q_source = 1 / len(graph.adj[sourceNode])
@@ -30,7 +30,7 @@ def chain(graph, n):
 
         if alpha > beta:
             update = dc(graph)
-            update.nodes[proposalNode]["dist"] = srcDistr
+            update.nodes[proposalNode]["distr"] = srcDistr
             graph = update
             plans.append(graph)
 
