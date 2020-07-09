@@ -9,7 +9,7 @@ def distr_count(graph):
 
     distrs = []
     for _, values in graph.nodes.data():
-        distrs.append(values["dist"])
+        distrs.append(values["distr"])
 
     count = set(distrs)
     count = len(count)
@@ -42,7 +42,7 @@ def reject_islands(plans):
 
             # Get a list of nodes in the current district
             nodes_in_distr = [
-                node for node, attrs in graph.nodes(data=True) if attrs["dist"] == i
+                node for node, attrs in graph.nodes(data=True) if attrs["distr"] == i
             ]
 
             # For each node in the current district, find its adjacent nodes
@@ -90,13 +90,13 @@ def reject_by_pop(plans):
             distr_check = True
 
             nodes_in_distr = [
-                node for node, attrs in graph.nodes(data=True) if attrs["dist"] == i
+                node for node, attrs in graph.nodes(data=True) if attrs["distr"] == i
             ]
             total_pop = 0
             for node in nodes_in_distr:
                 total_pop += graph.nodes[node]["pop"]
 
-            if total_pop > 251 or total_pop < 249:
+            if total_pop > 255 or total_pop < 245:
                 distr_check = False
 
             graph_check.append(distr_check)
