@@ -2,18 +2,7 @@
 """ File containing functions to reject districting plans produced by the
 Markov chain """
 
-
-def distr_count(graph):
-    """ Function to retrieve the number of districts present in a supplied
-    graph """
-
-    distrs = []
-    for _, values in graph.nodes.data():
-        distrs.append(values["distr"])
-
-    count = set(distrs)
-    count = len(count)
-    return count
+from utils import distr_count
 
 
 def reject_islands(plans):
