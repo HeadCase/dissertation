@@ -13,7 +13,7 @@ def draw(graph, fname=None):
     pos = graph.graph["position"]
 
     for node in graph.nodes():
-        colour.append(graph.nodes[node]["dist"])
+        colour.append(graph.nodes[node]["distr"])
 
     nx.draw_networkx_nodes(
         graph, pos, node_color=colour, node_size=700, with_labels=True
