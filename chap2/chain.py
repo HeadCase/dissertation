@@ -4,35 +4,46 @@
 from copy import deepcopy as dc
 from random import uniform
 from propose import candidates
+from score import score_plan
 
 
 # Markov Chain Simulation
-def chain(graph, n):
+def chain(init_plan, n, const=0.025):
     """ Markov chain function"""
 
     # While loop to control number of iterations
     i = 1
 
     # Place initial graph at the start of list of graphs output by the chain
-    plans = [graph]
+    # and initialise it as the current plan
+    plans = [init_plan]
+    curr_plan = init_plan
+
     while i < n:
 
-        sourceNode, proposalNode = candidates(graph)
-        srcDistr = graph.nodes[sourceNode]["distr"]
+        sourceNode, proposalNode = candidates(curr_plan)
+        srcDistr = curr_plan.nodes[sourceNode]["distr"]
 
-        score_source = graph.nodes[sourceNode]["pop"]
-        q_source = 1 / len(graph.adj[sourceNode])
-        score_prop = graph.nodes[proposalNode]["pop"]
-        q_prop = 1 / len(graph.adj[proposalNode])
+        prop_plan = dc(curr_plan)
+        prop_plan.nodes[proposalNode]["distr"] = srcDistr
 
-        alpha = min(1, (score_prop / score_source) * (q_prop / q_source))
-        beta = uniform(0.5, 1)
+        score_curr = score_plan(curr_plan, const)
+        score_prop = score_plan(prop_plan, const)
+
+        alpha = min(1, (score_prop / score_curr))
+        beta = uniform(0, 1)
+
+        # score_source = graph.nodes[sourceNode]["pop"]
+        # q_source = 1 / len(graph.adj[sourceNode])
+        # score_prop = graph.nodes[proposalNode]["pop"]
+        # q_prop = 1 / len(graph.adj[proposalNode])
+
+        # alpha = min(1, (score_prop / score_source) * (q_prop / q_source))
+        # beta = uniform(0.5, 1)
 
         if alpha > beta:
-            update = dc(graph)
-            update.nodes[proposalNode]["distr"] = srcDistr
-            graph = update
-            plans.append(graph)
+            curr_plan = prop_plan
+            plans.append(curr_plan)
 
         print("------ End iteration {} ------".format(i))
         i += 1
