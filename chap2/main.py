@@ -17,28 +17,12 @@ def main():
 
     # plans = [S]
     # S2 = dc(S)
-    # S2.nodes[26]["dist"] = 1
+    # S2.nodes[26]["distr"] = 1
     # plans.append(S2)
-    plans = chain(S, 20000)
+    plans = chain(S, 1000)
     contiguous, reject = reject_islands(plans)
     clean, reject2 = reject_by_pop(contiguous)
     reject.extend(reject2)
-
-    for graph in clean:
-        # graph = clean[index]
-        index = 1
-        print("Plan {}".format(index))
-        print("---------------------")
-        for i in range(1, 5):
-            nodes_in_distr = [
-                node for node, attrs in graph.nodes(data=True) if attrs["dist"] == i
-            ]
-            total_pop = 0
-            for node in nodes_in_distr:
-                total_pop += graph.nodes[node]["pop"]
-            print("District {}: total population - {}".format(i, total_pop))
-        print("---------------------")
-        index += 1
 
     print("{} raw plans".format(len(plans)))
     print("Kept {} clean plans".format(len(clean)))
@@ -46,7 +30,7 @@ def main():
 
     count = 1
     for i in clean:
-        draw(i, "clean-plans{}".format(count))
+        draw(i, "refactor2-clean-plans{}".format(count))
         print("------ Clean plan {} drawn ------".format(count))
         count += 1
 
@@ -71,5 +55,5 @@ if __name__ == "__main__":
 ############
 
 # nodes_in_distr = [
-#     node for node, attrs in graph.nodes(data=True) if attrs["dist"] == i
+#     node for node, attrs in graph.nodes(data=True) if attrs["distr"] == i
 # ]
