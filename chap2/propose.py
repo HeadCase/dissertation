@@ -39,7 +39,7 @@ def get_proposal(sourceNode, graph):
     candNodes = [
         n
         for n in neighbors
-        if graph.nodes[n]["dist"] != graph.nodes[sourceNode]["dist"]
+        if graph.nodes[n]["distr"] != graph.nodes[sourceNode]["distr"]
     ]
 
     # In order to preserve all six districts and minimise districting
@@ -61,12 +61,12 @@ def get_proposal(sourceNode, graph):
 
 def proposal_threshold(node, graph):
     """ Determine if a supplied district has too many or too few nodes """
-    distr = graph.nodes[node]["dist"]
+    distr = graph.nodes[node]["distr"]
     node_count = 0
     for _, attrs in graph.nodes(data=True):
-        if attrs["dist"] == distr:
+        if attrs["distr"] == distr:
             node_count += 1
-    if node_count < 9:
+    if node_count < 8:
         return False
     else:
         return True
@@ -74,12 +74,12 @@ def proposal_threshold(node, graph):
 
 def source_threshold(node, graph):
     """ Determine if a supplied district has too many or too few nodes """
-    distr = graph.nodes[node]["dist"]
+    distr = graph.nodes[node]["distr"]
     node_count = 0
     for _, attrs in graph.nodes(data=True):
-        if attrs["dist"] == distr:
+        if attrs["distr"] == distr:
             node_count += 1
-    if node_count > 9:
+    if node_count > 10:
         return False
     else:
         return True
