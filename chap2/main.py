@@ -3,35 +3,40 @@
 
 # Imports
 from init import init_graph
-import networkx as nx
+from election import election
+from election import calc_winner
 from reject import reject_islands
 from reject import reject_by_pop
 from draw import draw
 from chain import chain
-from utils import distr_pop
-from utils import contig_distr
-from utils import distr_nodes
+
 from statistics import pstdev
-from score import score_plan
-from score import score_contig
+
+# from copy import deepcopy as dc
+# import networkx as nx
+from utils import distr_pop
+
+# from utils import contig_distr
+# from utils import distr_nodes
+# from score import score_plan
+# from score import score_contig
 
 import sys
 import numpy
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
-from copy import deepcopy as dc
-
 
 def main():
     """ Main function """
 
     S = init_graph()
+    # results = election(S)
+    # winners = calc_winner(results)
+    # for distr in winners.items():
+    #     print(distr)
 
-    plans = chain(S, 50000, 0.15)
-    # plans, _ = reject_by_pop(plans)
-    # plans, _ = reject_islands(plans)
-    # print("Produced {} valid plans".format(len(plans)))
+    plans = chain(S, 20000, 0.2)
 
     apport, reject = reject_by_pop(plans)
     contiguous, reject2 = reject_islands(apport)
@@ -47,9 +52,22 @@ def main():
 
     count = 1
     for i in contiguous:
-        draw(i, "two-factor-scoring-plan{}".format(count))
-        print("------ Two Factor Score Plan {} drawn ------".format(count))
+        results = election(i)
+        winners = calc_winner(results)
+        print("Results for plan {}".format(count))
+        for distr in winners.items():
+            print(distr)
         count += 1
+
+    # plans, _ = reject_by_pop(plans)
+    # plans, _ = reject_islands(plans)
+    # print("Produced {} valid plans".format(len(plans)))
+
+    # count = 1
+    # for i in contiguous:
+    #     draw(i, "proposal-refactor-plan{}".format(count))
+    #     print("------ Proposal Refactor Plan {} drawn ------".format(count))
+    #     count += 1
 
     # for plan in plans:
     #     distr_pops = []
