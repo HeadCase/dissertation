@@ -8,7 +8,7 @@ from score import score_plan
 
 
 # Markov Chain Simulation
-def chain(init_plan, n, const=0.025):
+def chain(init_plan, n, const=0.2):
     """ Markov chain function"""
 
     # While loop to control number of iterations
@@ -37,7 +37,8 @@ def chain(init_plan, n, const=0.025):
             curr_plan = prop_plan
             plans.append(curr_plan)
 
-        print("------ End iteration {} ------".format(i))
+        if i % 100 == 0:
+            print("------ End iteration {} ------".format(i))
         i += 1
 
     return plans
