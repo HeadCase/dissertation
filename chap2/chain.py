@@ -33,14 +33,6 @@ def chain(init_plan, n, const=0.025):
         alpha = min(1, (score_prop / score_curr))
         beta = uniform(0, 1)
 
-        # score_source = graph.nodes[sourceNode]["pop"]
-        # q_source = 1 / len(graph.adj[sourceNode])
-        # score_prop = graph.nodes[proposalNode]["pop"]
-        # q_prop = 1 / len(graph.adj[proposalNode])
-
-        # alpha = min(1, (score_prop / score_source) * (q_prop / q_source))
-        # beta = uniform(0.5, 1)
-
         if alpha > beta:
             curr_plan = prop_plan
             plans.append(curr_plan)
