@@ -20,41 +20,46 @@ import numpy
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
-# from copy import deepcopy as dc
+from copy import deepcopy as dc
 
 
 def main():
     """ Main function """
 
     S = init_graph()
-    plans = chain(S, 2000, 0.15)
+
+    plans = chain(S, 50000, 0.15)
+    # plans, _ = reject_by_pop(plans)
     # plans, _ = reject_islands(plans)
-    plans, _ = reject_by_pop(plans)
     # print("Produced {} valid plans".format(len(plans)))
 
-    # contiguous, reject = reject_islands(plans)
-    # clean, reject2 = reject_by_pop(contiguous)
-    # reject.extend(reject2)
+    apport, reject = reject_by_pop(plans)
+    contiguous, reject2 = reject_islands(apport)
+    reject.extend(reject2)
 
-    # print("{} raw plans".format(len(plans)))
-    # print("Kept {} clean plans".format(len(clean)))
-    # print("Rejected {} non-contiguous or malapportioned plans".format(len(reject)))
+    print("{} raw plans".format(len(plans)))
+    print("Kept {} clean plans".format(len(contiguous)))
+    print(
+        "Rejected {} malapportioned plans and {} non-contiguous plans".format(
+            len(reject), len(reject2)
+        )
+    )
 
     count = 1
-    for i in plans:
+    for i in contiguous:
         draw(i, "two-factor-scoring-plan{}".format(count))
         print("------ Two Factor Score Plan {} drawn ------".format(count))
         count += 1
 
-    for plan in plans:
-        distr_pops = []
-        for distr in range(1, 5):
-            distr_pops.append(distr_pop(distr, plan))
-        print(
-            "Plan {} districts have population: {} (std dev: {})".format(
-                1 + plans.index(plan), distr_pops, round(pstdev(distr_pops), 1)
-            )
-        )
+    # for plan in plans:
+    #     distr_pops = []
+    #     for distr in range(1, 5):
+    #         distr_pops.append(distr_pop(distr, plan))
+    #     print(
+    #         "Plan {} districts have population: {} (std dev: {})".format(
+    #             1 + plans.index(plan), distr_pops, round(pstdev(distr_pops), 1)
+    #         )
+    #     )
 
     # count = 1
     # for i in clean:
