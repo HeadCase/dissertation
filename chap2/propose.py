@@ -3,6 +3,7 @@
 
 # Imports
 from random import randint as rint
+from utils import distr_nodes
 
 
 def candidates(graph):
@@ -12,23 +13,27 @@ def candidates(graph):
     # the number of nodes in the source node's district
     proposalNode = 0
     while proposalNode == 0:
-        sourceNode = get_source(graph)
+        sourceNode = rint(1, 36)  # get_source(graph)
         proposalNode = get_proposal(sourceNode, graph)
 
     return sourceNode, proposalNode
 
 
-def get_source(graph):
-    sourceNode = 0
-    while sourceNode == 0:
-        sourceNode = rint(1, 36)
-        if source_threshold(sourceNode, graph):
-            return sourceNode
-        else:
-            sourceNode = 0
+# def get_source(graph):
+#     """ Get a source node from the graph to trigger a district swap """
+#     # sourceNode = 0
+#     # while sourceNode == 0:
+#     sourceNode = rint(1, 36)
+#     # if source_threshold(sourceNode, graph):
+#     #     return sourceNode
+#     # else:
+#     #     sourceNode = 0
+#     return sourceNode
 
 
 def get_proposal(sourceNode, graph):
+    """ Get a proposal node neighbouring the source node, to potentially be
+    swapped to the district of the source node """
     proposalNode = 0
 
     # Get neighbors to that node
@@ -62,24 +67,27 @@ def get_proposal(sourceNode, graph):
 def proposal_threshold(node, graph):
     """ Determine if a supplied district has too many or too few nodes """
     distr = graph.nodes[node]["distr"]
-    node_count = 0
-    for _, attrs in graph.nodes(data=True):
-        if attrs["distr"] == distr:
-            node_count += 1
-    if node_count < 8:
+    nodes = distr_nodes(distr, graph)
+    node_count = len(nodes)
+
+    # node_count = 0
+    # for _, attrs in graph.nodes(data=True):
+    #     if attrs["distr"] == distr:
+    #         node_count += 1
+    if node_count < 2:
         return False
     else:
         return True
 
 
-def source_threshold(node, graph):
-    """ Determine if a supplied district has too many or too few nodes """
-    distr = graph.nodes[node]["distr"]
-    node_count = 0
-    for _, attrs in graph.nodes(data=True):
-        if attrs["distr"] == distr:
-            node_count += 1
-    if node_count > 10:
-        return False
-    else:
-        return True
+# def source_threshold(node, graph):
+#     """ Determine if a supplied district has too many or too few nodes """
+#     distr = graph.nodes[node]["distr"]
+#     node_count = 0
+#     for _, attrs in graph.nodes(data=True):
+#         if attrs["distr"] == distr:
+#             node_count += 1
+#     if node_count > 10:
+#         return False
+#     else:
+#         return True
