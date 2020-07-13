@@ -130,3 +130,12 @@ dmypy.json
 
 # Synology
 .DS_Store
+
+# Misc dirs
+tinker/
+MCMC_Intro/
+WI-shapefiles/
+imgs/
+
+# Misc files
+~$*
