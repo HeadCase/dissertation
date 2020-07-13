@@ -3,6 +3,7 @@
 Markov chain """
 
 from utils import distr_count
+from utils import contig_distr
 
 
 def reject_islands(plans):
@@ -18,33 +19,13 @@ def reject_islands(plans):
         # Retrieve the number of districts in the given plan
         num_distrs = distr_count(graph)
 
-        # Create empty list to be populated with booleans for each district
+        # Create an empty list to hold the boolean returns from contiguity
+        # check
         graph_check = []
 
-        # For each district in the plan, retrieve the nodes of that district
-        # and test each node to confirm that at least one of its neighbors is
-        # from the same district
-        for i in range(1, num_distrs + 1):
-            # Create empty list to be populated with booleans for each node in
-            # the current district
-            distr_check = []
-
-            # Get a list of nodes in the current district
-            nodes_in_distr = [
-                node for node, attrs in graph.nodes(data=True) if attrs["distr"] == i
-            ]
-
-            # For each node in the current district, find its adjacent nodes
-            # and test that at least one such neighbor is a member of the same
-            # district
-            for node in nodes_in_distr:
-                neighbors = list(graph.neighbors(node))
-                distr_check.append(any(item in neighbors for item in nodes_in_distr))
-
-            if False in distr_check:
-                graph_check.append(False)
-            else:
-                graph_check.append(True)
+        # Iterate through each distract in the plan
+        for distr in range(1, num_distrs + 1):
+            graph_check.append(contig_distr(distr, graph))
 
         if False in graph_check:
             reject_plans.append(graph)
