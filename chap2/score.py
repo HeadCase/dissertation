@@ -47,6 +47,10 @@ def score_pop(plan):
     # iterable input
     std_dev = pstdev(distr_pops)
 
+    # Conditional sets a threshold for the maximum standard deviation allowed
+    if std_dev > 40:
+        std_dev = 1000
+
     return std_dev
 
 
