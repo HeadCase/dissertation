@@ -42,6 +42,10 @@ def main():
     gerry_d1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     gerry_d2 = [10, 11, 12, 15, 16, 18, 24, 30, 36]
     gerry_d3 = [17, 22, 23, 28, 29, 32, 33, 34, 35]
+    pink = {3: "#EE9BBB", 4: "#E26D9A", 5: "#CE477B", 6: "#BC2760", 7: "#951144"}
+    yellow = {3: "#FFDFA6", 4: "#FFCF7B", 5: "#EEB653", 6: "#D99A2D", 7: "#AC7514"}
+    blue = {3: "#91ABD4", 4: "#6081B6", 5: "#40649D", 6: "#285090", 7: "#173A72"}
+    green = {3: "#CCF39E", 4: "#B2EB71", 5: "#96D84B", 6: "#7CC528", 7: "#5C9C12"}
     # gerry_d4 = [13, 14, 19, 20, 21, 25, 26, 27, 31]
 
     sqre_tot = 0
@@ -52,23 +56,95 @@ def main():
         cr_colour.append(S.nodes[n]["vote_circ"])
         sqre_tot += S.nodes[n]["vote_sqre"]
         if S.nodes[n]["distr"] == 1:
-            fair_colour.append("#7CBA34")
+            if S.nodes[n]["vote_sqre"] == 3:
+                fair_colour.append(green[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                fair_colour.append(green[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                fair_colour.append(green[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                fair_colour.append(green[6])
+            else:
+                fair_colour.append(green[7])
         elif S.nodes[n]["distr"] == 2:
-            fair_colour.append("#AC781D")
+            if S.nodes[n]["vote_sqre"] == 3:
+                fair_colour.append(yellow[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                fair_colour.append(yellow[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                fair_colour.append(yellow[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                fair_colour.append(yellow[6])
+            else:
+                fair_colour.append(yellow[7])
         elif S.nodes[n]["distr"] == 3:
-            fair_colour.append("#2F5188")
+            if S.nodes[n]["vote_sqre"] == 3:
+                fair_colour.append(blue[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                fair_colour.append(blue[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                fair_colour.append(blue[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                fair_colour.append(blue[6])
+            else:
+                fair_colour.append(blue[7])
         else:
-            fair_colour.append("#B13263")
+            if S.nodes[n]["vote_sqre"] == 3:
+                fair_colour.append(pink[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                fair_colour.append(pink[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                fair_colour.append(pink[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                fair_colour.append(pink[6])
+            else:
+                fair_colour.append(pink[7])
 
     for n in nlist:
         if n in gerry_d1:
-            gerry_colour.append("#AC781D")
+            if S.nodes[n]["vote_sqre"] == 3:
+                gerry_colour.append(yellow[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                gerry_colour.append(yellow[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                gerry_colour.append(yellow[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                gerry_colour.append(yellow[6])
+            else:
+                gerry_colour.append(yellow[7])
         elif n in gerry_d2:
-            gerry_colour.append("#B13263")
+            if S.nodes[n]["vote_sqre"] == 3:
+                gerry_colour.append(pink[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                gerry_colour.append(pink[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                gerry_colour.append(pink[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                gerry_colour.append(pink[6])
+            else:
+                gerry_colour.append(pink[7])
         elif n in gerry_d3:
-            gerry_colour.append("#7CBA34")
+            if S.nodes[n]["vote_sqre"] == 3:
+                gerry_colour.append(green[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                gerry_colour.append(green[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                gerry_colour.append(green[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                gerry_colour.append(green[6])
+            else:
+                gerry_colour.append(green[7])
         else:
-            gerry_colour.append("#2F5188")
+            if S.nodes[n]["vote_sqre"] == 3:
+                gerry_colour.append(blue[3])
+            elif S.nodes[n]["vote_sqre"] == 4:
+                gerry_colour.append(blue[4])
+            elif S.nodes[n]["vote_sqre"] == 5:
+                gerry_colour.append(blue[5])
+            elif S.nodes[n]["vote_sqre"] == 6:
+                gerry_colour.append(blue[6])
+            else:
+                gerry_colour.append(blue[7])
 
     # dists = {
     #     1: [1, 2, 3, 7, 8, 9, 13, 14, 15],
@@ -128,22 +204,6 @@ def main():
     # plt.show()
 
     # Fair Districting
-    # nx.draw(
-    #     S,
-    #     pos,
-    #     labels=sq_labels,
-    #     font_size=52,
-    #     node_list=nlist,
-    #     node_size=sq_size,
-    #     node_shape="s",
-    #     node_color=fair_colour,
-    #     vmin=0,
-    #     vmax=9,
-    #     linewidths=4,
-    # )
-    # plt.show()
-
-    # Gerrymandered Districting
     nx.draw(
         S,
         pos,
@@ -152,12 +212,28 @@ def main():
         node_list=nlist,
         node_size=sq_size,
         node_shape="s",
-        node_color=gerry_colour,
+        node_color=fair_colour,
         vmin=0,
         vmax=9,
         linewidths=4,
     )
     plt.show()
+
+    # Gerrymandered Districting
+    # nx.draw(
+    #     S,
+    #     pos,
+    #     labels=sq_labels,
+    #     font_size=52,
+    #     node_list=nlist,
+    #     node_size=sq_size,
+    #     node_shape="s",
+    #     node_color=gerry_colour,
+    #     vmin=0,
+    #     vmax=9,
+    #     linewidths=4,
+    # )
+    # plt.show()
 
     # nx.draw(
     #     S,
