@@ -50,9 +50,9 @@ def main():
 
     sqre_tot = 0
     for n in nlist:
-        sq_size.append(S.nodes[n]["vote_sqre"] * 1200)
+        sq_size.append(S.nodes[n]["vote_sqre"] * 2000)
         sq_colour.append(S.nodes[n]["vote_sqre"])
-        cr_size.append(S.nodes[n]["vote_circ"] * 1200)
+        cr_size.append(S.nodes[n]["vote_circ"] * 2000)
         cr_colour.append(S.nodes[n]["vote_circ"])
         sqre_tot += S.nodes[n]["vote_sqre"]
         if S.nodes[n]["distr"] == 1:
@@ -172,7 +172,7 @@ def main():
     #     S,
     #     pos,
     #     labels=sq_labels,
-    #     font_size=52,
+    #     font_size=72,
     #     node_list=nlist,
     #     node_size=sq_size,
     #     node_shape="s",
@@ -186,38 +186,38 @@ def main():
     # plt.savefig("squares-baseline.pdf", bbox_inches="tight", pad_inches=3)
 
     # Circles plot
-    # nx.draw(
-    #     S,
-    #     pos,
-    #     labels=cr_labels,
-    #     font_size=52,
-    #     node_list=nlist,
-    #     node_size=cr_size,
-    #     node_shape="o",
-    #     node_color=cr_colour,
-    #     vmin=0,
-    #     vmax=9,
-    #     linewidths=4,
-    #     cmap=plt.cm.Oranges,
-    # )
-
-    # plt.show()
-
-    # Fair Districting
     nx.draw(
         S,
         pos,
-        labels=sq_labels,
-        font_size=52,
+        labels=cr_labels,
+        font_size=72,
         node_list=nlist,
-        node_size=sq_size,
-        node_shape="s",
-        node_color=fair_colour,
+        node_size=cr_size,
+        node_shape="o",
+        node_color=cr_colour,
         vmin=0,
         vmax=9,
         linewidths=4,
+        cmap=plt.cm.Oranges,
     )
+
     plt.show()
+
+    # Fair Districting
+    # nx.draw(
+    #     S,
+    #     pos,
+    #     labels=sq_labels,
+    #     font_size=52,
+    #     node_list=nlist,
+    #     node_size=sq_size,
+    #     node_shape="s",
+    #     node_color=fair_colour,
+    #     vmin=0,
+    #     vmax=9,
+    #     linewidths=4,
+    # )
+    # plt.show()
 
     # Gerrymandered Districting
     # nx.draw(
