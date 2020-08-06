@@ -38,8 +38,9 @@ def draw(graph, fname=None, colour=None):
         plt.savefig("imgs/{}.pdf".format(fname))
 
 
-def colour_scale(colour, all=None):
-    """ Return dictionary of chosen colour scale """
+def colour_scale(colour="blue", all=None):
+    """ Return dictionary of chosen colour scale. Setting all to true returns
+    full colour palette of all four colours """
 
     # Define discrete colour scales
     scales = {
@@ -53,6 +54,20 @@ def colour_scale(colour, all=None):
         },
         "blue": {1: "#91ABD4", 2: "#6081B6", 3: "#40649D", 4: "#285090", 5: "#173A72"},
         "green": {1: "#CCF39E", 2: "#B2EB71", 3: "#96D84B", 4: "#7CC528", 5: "#5C9C12"},
+        "purple": {
+            1: "#C6C7E1",
+            2: "#ACAAD1",
+            3: "#908DC2",
+            4: "#796EB1",
+            5: "#64479E",
+        },
+        "orange": {
+            1: "#FCB97D",
+            2: "#FD8C51",
+            3: "#F87D2A",
+            4: "#E95E0D",
+            5: "#CC4401",
+        },
     }
     if all:
         return scales
@@ -94,11 +109,11 @@ def single_plot_params(graph, stat, colour="blue"):
     intvl = int(round((max(stat_list) - min(stat_list)) / 5))
 
     intvls = {
-        1: (min(stat_list), min(stat_list) + intvl),
-        2: (min(stat_list) + intvl + 1, min(stat_list) + 2 * intvl),
-        3: (min(stat_list) + 2 * intvl + 1, min(stat_list) + 3 * intvl),
-        4: (min(stat_list) + 3 * intvl + 1, min(stat_list) + 4 * intvl),
-        5: (min(stat_list) + 4 * intvl + 1, max(stat_list)),
+        1: (min(stat_list) - 1, min(stat_list) + intvl),
+        2: (min(stat_list) + intvl, min(stat_list) + 2 * intvl),
+        3: (min(stat_list) + 2 * intvl, min(stat_list) + 3 * intvl),
+        4: (min(stat_list) + 3 * intvl, min(stat_list) + 4 * intvl),
+        5: (min(stat_list) + 4 * intvl, max(stat_list) + 1),
     }
 
     for n in nlist:
@@ -106,7 +121,7 @@ def single_plot_params(graph, stat, colour="blue"):
         for i in range(1, 6):
             lower = intvls[i][0]
             upper = intvls[i][1]
-            if lower <= record <= upper:
+            if lower <= record < upper:
                 col_map.append(col_pal[i])
                 sizes.append(size_pal[i])
 
@@ -128,7 +143,8 @@ def distr_plot_params(graph, stat, colour="blue"):
     stat_list = []
 
     # Colour palette and sizes definitions
-    col_pal = colour_scale(colour)
+    col_pal = colour_scale(colour, all=True)
+    col_names = [name for name, _ in col_pal.items()]
     size_pal = {1: 10000, 2: 12000, 3: 14000, 4: 16000, 5: 18000}
 
     # Empty lists of main plot parameters to be populated
@@ -154,12 +170,15 @@ def distr_plot_params(graph, stat, colour="blue"):
 
     for n in nlist:
         record = graph.nodes[n][stat]
-        for i in range(1, 6):
-            lower = intvls[i][0]
-            upper = intvls[i][1]
-            if lower <= record <= upper:
-                col_map.append(col_pal[i])
-                sizes.append(size_pal[i])
+        distr = graph.nodes[n]["distr"]
+        for j in range(1, 5):
+            if distr == j:
+                for i in range(1, 6):
+                    lower = intvls[i][0]
+                    upper = intvls[i][1]
+                    if lower <= record <= upper:
+                        col_map.append(col_pal[col_names[j - 1]][i])
+                        sizes.append(size_pal[i])
 
     return labels, sizes, col_map
 
