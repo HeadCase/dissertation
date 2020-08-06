@@ -136,6 +136,10 @@ def init_graph():
         36: 13,
     }
 
+    # Dicts for margins for each party to be tabulated below
+    sqre_marg = {}
+    circ_marg = {}
+
     # Fix naming (and hence position) scheme inherited from built-in graph
     # function (grid_2d_graph)
     mapping = {}
@@ -149,19 +153,32 @@ def init_graph():
     nx.relabel_nodes(gname, mapping, copy=False)
 
     # Load up districts into node attribute
-    for keys, values in dists.items():
-        for node in values:
-            gname.nodes[node]["distr"] = keys
+    for key, value in dists.items():
+        for node in value:
+            gname.nodes[node]["distr"] = key
 
-    # Load up population values into node attribute
-    for keys, values in pop.items():
-        gname.nodes[keys]["pop"] = values
+    # Load up population value into node attribute
+    for key, value in pop.items():
+        sqre = vote_sqre[key]
+        circ = vote_circ[key]
+        gname.nodes[key]["pop"] = value
 
-    for keys, values in vote_circ.items():
-        gname.nodes[keys]["vote_circ"] = values
+        # Define margins of victory by first computing proportion of the vote
+        # and subtracting other party's margin
+        sqre_marg[key] = round(((sqre / value) - (circ / value)) * 100, 1)
+        circ_marg[key] = round(((circ / value) - (sqre / value)) * 100, 1)
 
-    for keys, values in vote_sqre.items():
-        gname.nodes[keys]["vote_sqre"] = values
+    for key, value in vote_circ.items():
+        gname.nodes[key]["vote_circ"] = value
+
+    for key, value in circ_marg.items():
+        gname.nodes[key]["circ_marg"] = value
+
+    for key, value in vote_sqre.items():
+        gname.nodes[key]["vote_sqre"] = value
+
+    for key, value in sqre_marg.items():
+        gname.nodes[key]["sqre_marg"] = value
 
     gname.graph["position"] = pos
 
