@@ -7,8 +7,9 @@ from election import election
 from election import calc_winner
 from reject import reject_islands
 from reject import reject_by_pop
-from draw import draw
+from draw import colour_scale
 from draw import single_plot_params
+from draw import distr_plot_params
 from chain import chain
 
 from statistics import pstdev
@@ -38,10 +39,14 @@ numpy.set_printoptions(threshold=sys.maxsize)
 def main():
     """ Main function """
 
+    # col_map = colour_scale(all=True)
+    # print(col_map[1])
     S = init_graph()
-    labs, sizes, colours = single_plot_params(S, "pop", "green")
+    print(S.nodes.data("sqre_marg"))
+    labs, sizes, colours = single_plot_params(S, "sqre_marg", "purple")
     pos = S.graph["position"]
     nlist = list(S.nodes)
+    colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
 
     nx.draw(
         S,
@@ -50,8 +55,9 @@ def main():
         node_list=nlist,
         node_color=colours,
         node_size=sizes,
-        font_size=50,
-        node_shape="s",
+        font_size=56,
+        node_shape="o",
+        cmap=plt.cm.RdYlGn,
     )
     plt.show()
 
