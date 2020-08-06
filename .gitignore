@@ -139,3 +139,6 @@ imgs/
 
 # Misc files
 ~$*
+*.svg
+*.pdf
+*.png
