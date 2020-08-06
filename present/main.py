@@ -16,6 +16,7 @@ import matplotlib.font_manager as font_manager
 # font_list = font_manager.createFontList(font_files)
 # font_manager.fontManager.ttflist.extend(font_list)
 # # mpl.rcParams["font.family"] = ["Source Sans"]
+import matplotlib.font_manager as font_manager
 mpl.rcParams["font.family"] = ["sans-serif"]  # fancy fonts
 mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
 
