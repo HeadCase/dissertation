@@ -13,7 +13,9 @@ from chain import chain
 from statistics import pstdev
 
 # from copy import deepcopy as dc
-# import networkx as nx
+import networkx as nx
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 from utils import distr_pop
 
 # from utils import contig_distr
@@ -23,6 +25,11 @@ from utils import distr_pop
 
 import sys
 import numpy
+
+import matplotlib.font_manager as font_manager
+
+mpl.rcParams["font.family"] = ["sans-serif"]  # fancy fonts
+mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
@@ -36,7 +43,7 @@ def main():
     # for distr in winners.items():
     #     print(distr)
 
-    plans = chain(S, 20000, 0.2)
+    plans = chain(S, 15000, 0.25)
 
     apport, reject = reject_by_pop(plans)
     contiguous, reject2 = reject_islands(apport)
@@ -52,12 +59,46 @@ def main():
 
     count = 1
     for i in contiguous:
-        results = election(i)
-        winners = calc_winner(results)
-        print("Results for plan {}".format(count))
-        for distr in winners.items():
-            print(distr)
+        # results = election(i)
+        # winners = calc_winner(results)
+        # print("Results for plan {}".format(count))
+        # for distr in winners.items():
+        #     print(distr)
         count += 1
+
+        pos = i.graph["position"]
+        nlist = list(i.nodes)
+        size = []
+        colour = []
+
+        for n in nlist:
+            size.append((i.nodes[n]["pop"] ** 3) / 3)
+            if i.nodes[n]["distr"] == 1:
+                colour.append("#EEB653")
+            elif i.nodes[n]["distr"] == 2:
+                colour.append("#CE477B")
+            elif i.nodes[n]["distr"] == 3:
+                colour.append("#40649D")
+            else:
+                colour.append("#96D84B")
+
+        labels = {}
+        for n in nlist:
+            labels[n] = i.nodes[n]["pop"]
+
+        nx.draw(
+            i,
+            pos,
+            labels=labels,
+            font_size=60,
+            node_list=nlist,
+            node_size=size,
+            node_shape="s",
+            node_color=colour,
+            linewidths=4,
+            width=4,
+        )
+        plt.show()
 
     # plans, _ = reject_by_pop(plans)
     # plans, _ = reject_islands(plans)
