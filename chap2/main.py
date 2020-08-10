@@ -7,17 +7,12 @@ from election import election
 from election import calc_winner
 from reject import reject_islands
 from reject import reject_by_pop
-from draw import colour_scale
-from draw import single_plot_params
-from draw import distr_plot_params
 from chain import chain
 
 from statistics import pstdev
 
 # from copy import deepcopy as dc
 import networkx as nx
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 from utils import distr_pop
 
 # from utils import contig_distr
@@ -28,11 +23,6 @@ from utils import distr_pop
 import sys
 import numpy
 
-import matplotlib.font_manager as font_manager
-
-mpl.rcParams["font.family"] = ["sans-serif"]  # fancy fonts
-mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
-
 numpy.set_printoptions(threshold=sys.maxsize)
 
 
@@ -42,31 +32,14 @@ def main():
     # col_map = colour_scale(all=True)
     # print(col_map[1])
     S = init_graph()
-    print(S.nodes.data("sqre_marg"))
-    labs, sizes, colours = single_plot_params(S, "sqre_marg", "purple")
-    pos = S.graph["position"]
-    nlist = list(S.nodes)
-    colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
-
-    nx.draw(
-        S,
-        pos,
-        labels=labs,
-        node_list=nlist,
-        node_color=colours,
-        node_size=sizes,
-        font_size=56,
-        node_shape="o",
-        cmap=plt.cm.RdYlGn,
-    )
-    plt.show()
 
     # results = election(S)
     # winners = calc_winner(results)
     # for distr in winners.items():
     #     print(distr)
 
-    # plans = chain(S, 15000, 0.25)
+    # plans =
+    chain(S, 15000, 0.25)
 
     # apport, reject = reject_by_pop(plans)
     # contiguous, reject2 = reject_islands(apport)
@@ -109,20 +82,6 @@ def main():
     #     for n in nlist:
     #         labels[n] = i.nodes[n]["pop"]
 
-    #     nx.draw(
-    #         i,
-    #         pos,
-    #         labels=labels,
-    #         font_size=60,
-    #         node_list=nlist,
-    #         node_size=size,
-    #         node_shape="s",
-    #         node_color=colour,
-    #         linewidths=4,
-    #         width=4,
-    #     )
-    #     plt.show()
-
     # plans, _ = reject_by_pop(plans)
     # plans, _ = reject_islands(plans)
     # print("Produced {} valid plans".format(len(plans)))
@@ -158,11 +117,6 @@ def main():
     #     draw(i, "reject-plans{}".format(count))
     #     print("------ Reject {} drawn ------".format(count))
     #     count += 1
-
-    # draw(S, "refactor-S-edit")
-    # print(candidates(S))
-    # draw(S, "score-refactor")
-    # draw(S2, "island-test")
 
 
 if __name__ == "__main__":
