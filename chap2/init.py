@@ -180,6 +180,9 @@ def init_graph():
     for key, value in sqre_marg.items():
         gname.nodes[key]["sqre_marg"] = value
 
+    for n in list(gname.nodes):
+        gname.nodes[n]['node label'] = n
+
     gname.graph["position"] = pos
 
     return gname
