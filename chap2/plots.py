@@ -22,11 +22,11 @@ def main():
     # col_map = colour_scale(all=True)
     # print(col_map[1])
     S = init_graph()
-    print(S.nodes.data("sqre_marg"))
-    labs, sizes, colours = single_plot_params(S, "sqre_marg", "purple")
+    labs, sizes, colours = distr_plot_params(S, "node label", "purple", flat=True)
+    # print(len(labs), len(sizes), len(colours))
     pos = S.graph["position"]
     nlist = list(S.nodes)
-    colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
+    # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
 
     nx.draw(
         S,
@@ -37,7 +37,7 @@ def main():
         node_size=sizes,
         font_size=56,
         node_shape="o",
-        cmap=plt.cm.RdYlGn,
+        # cmap=plt.cm.RdYlGn,
     )
     plt.show()
 
