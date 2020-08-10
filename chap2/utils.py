@@ -49,7 +49,7 @@ def contig_distr(distr, graph):
 
     # Send required arguments to breadth-first search (BFS) algorithm to get a
     # list of contiguous nodes in the district
-    contig_nodes = bfs(init_node, distr, distr_nodes, graph)
+    contig_nodes = bfs(init_node, graph)
 
     # While the code above initialises with the first node in the district, it
     # doesn't really matter. If the BFS returns any list of contiguous nodes
@@ -61,7 +61,7 @@ def contig_distr(distr, graph):
         return False
 
 
-def bfs(node, distr, d_nodes, graph):
+def bfs(node, graph):
     """ Breadth-first search (BFS) for traversing the full set of nodes, from
     the supplied district, which are contiguous. """
 
@@ -71,6 +71,9 @@ def bfs(node, distr, d_nodes, graph):
     # search going until the queue is empty.
     queue = deque([node])
     visited = [node]
+
+    # Get district of supplied node
+    distr = graph.nodes[node]["distr"]
 
     while queue:
         curr_node = queue.popleft()
