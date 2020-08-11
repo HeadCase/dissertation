@@ -8,7 +8,7 @@ from math import exp as e
 from statistics import pstdev
 
 
-def score_plan(plan, const=0.025):
+def score_plan(plan, const):
     """ Accepts a districting plan in the form of a networkx graph and scores
     it for apportionment equality. The score function takes the form of an
     energy function using the standard deviation of the population of each
@@ -48,7 +48,7 @@ def score_pop(plan):
     std_dev = pstdev(distr_pops)
 
     # Conditional sets a threshold for the maximum standard deviation allowed
-    if std_dev > 40:
+    if std_dev > 60:
         std_dev = 1000
 
     return std_dev
@@ -72,6 +72,6 @@ def score_contig(plan):
         if not item:
             num_discon += 1
 
-    score = 0.5 ** num_discon
+    score = 20 ** num_discon
 
     return score
