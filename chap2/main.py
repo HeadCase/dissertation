@@ -6,10 +6,16 @@ from init import init_graph
 from reject import reject_islands
 from reject import reject_by_pop
 from chain import chain
+
+from log import to_json
+from log import from_json
+
 from draw import distr_plot_params
 from networkx import draw
-from networkx import json_graph
 import matplotlib.pyplot as plt
+
+# from networkx import Graph
+# from networkx import json_graph
 
 # from utils import distr_pop
 # from statistics import pstdev
@@ -26,6 +32,7 @@ import matplotlib.pyplot as plt
 # from utils import contig_distr
 # from utils import distr_nodes
 # from score import score_plan
+
 # from score import score_pop
 # from score import score_contig
 
@@ -41,23 +48,25 @@ def main():
 
     S = init_graph()
 
-    adj = json_graph.adjacency_data(S)
-    with open("test-dump.json", "w") as f:
-        json.dump(adj, f)
+    plans = chain(S, 1000, 0.025)
 
-    # plans = chain(S, 250000, 0.025)
-
-    # contiguous, reject = reject_islands(plans)
-    # apport, reject2 = reject_by_pop(contiguous)
+    contiguous, reject = reject_islands(plans)
+    apport, reject2 = reject_by_pop(contiguous)
     # # reject.extend(reject2)
 
-    # print("{} raw plans".format(len(plans)))
-    # print("Kept {} clean plans".format(len(apport)))
-    # print(
-    #     "Rejected {} malapportioned plans and {} non-contiguous plans".format(
-    #         len(reject2), len(reject)
-    #     )
-    # )
+    print("{} raw plans".format(len(plans)))
+    print("Kept {} clean plans".format(len(apport)))
+    print(
+        "Rejected {} malapportioned plans and {} non-contiguous plans".format(
+            len(reject2), len(reject)
+        )
+    )
+
+    # for i in apport:
+    #     print(i.graph["position"])
+
+    to_json(apport, "function-test-dump")
+    readback = from_json("function-test-dump")
 
     # for plan in plans:
     #     distr_pops = []
@@ -71,27 +80,28 @@ def main():
     #         )
 
     # count = 1
-    # for i in apport:
-    #     labs, sizes, colours = distr_plot_params(i, "pop", "purple")
-    #     pos = i.graph["position"]
-    #     nlist = list(S.nodes)
+    for i in readback:
+        # print(i.graph["position"])
+        labs, sizes, colours = distr_plot_params(i, "pop", "purple")
+        pos = i.graph["position"]
+        nlist = list(S.nodes)
 
-    #     # fig = plt.figure()
+        # fig = plt.figure()
 
-    #     draw(
-    #         i,
-    #         pos,
-    #         labels=labs,
-    #         node_list=nlist,
-    #         node_color=colours,
-    #         node_size=3000,
-    #         font_size=36,
-    #         node_shape="o",
-    #     )
+        draw(
+            i,
+            pos,
+            labels=labs,
+            node_list=nlist,
+            node_color=colours,
+            node_size=3000,
+            font_size=36,
+            node_shape="o",
+        )
 
-    #     plt.savefig("imgs/new-trans-probs-{}.pdf".format(count))
-    # count += 1
-    # plt.show()
+        # plt.savefig("imgs/new-trans-probs-{}.pdf".format(count))
+        # count += 1
+        plt.show()
 
     # results = election(S)
     # winners = calc_winner(results)
