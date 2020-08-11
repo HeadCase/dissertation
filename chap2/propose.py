@@ -25,20 +25,22 @@ def transistion(graph):
     cur_distr = graph.nodes[sourceNode]["distr"]
     prop_distr = nbors_distrs[rint(0, len(nbors_distrs) - 1)]
 
-    # Compute 'outbound' transition probability as count of nodes which are in
-    # the same district as the proposed district from all neighbours over the
-    # total number of neighbours
+    # Compute 'outbound' transition probability as number of neighbours in the
+    # proposed district over the total number of neighbours
+    #
+    # Compute 'inbound' transition as the number of neighbours in the original
+    # source district over the total number of neighbors
     trans_out = nbors_distrs.count(prop_distr) / len(nbors)
     trans_in = nbors_distrs.count(cur_distr) / len(nbors)
 
-    trans = {
-        "node": sourceNode,
-        "prop_distr": prop_distr,
-        "trans_out": trans_out,
-        "trans_in": trans_in,
-    }
+    # trans = {
+    #     "node": sourceNode,
+    #     "prop_distr": prop_distr,
+    #     "trans_out": trans_out,
+    #     "trans_in": trans_in,
+    # }
 
-    return trans
+    return sourceNode, prop_distr, trans_out, trans_in
 
 
 # def candidates(graph):
