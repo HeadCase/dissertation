@@ -3,7 +3,7 @@
 # Imports
 from copy import deepcopy as dc
 from random import uniform
-from propose import candidates
+from propose import transistion
 from score import score_plan
 
 
@@ -21,16 +21,19 @@ def chain(init_plan, n, const=0.2):
 
     while i < n:
 
-        sourceNode, proposalNode = candidates(curr_plan)
-        srcDistr = curr_plan.nodes[sourceNode]["distr"]
+        trans = transistion(curr_plan)
+        sourceNode = trans["node"]
+        prop_distr = trans["prop_distr"]
+        trans_out = trans["trans_out"]
+        trans_in = trans["trans_in"]
 
         prop_plan = dc(curr_plan)
-        prop_plan.nodes[proposalNode]["distr"] = srcDistr
+        prop_plan.nodes[sourceNode]["distr"] = prop_distr
 
         score_curr = score_plan(curr_plan, const)
         score_prop = score_plan(prop_plan, const)
 
-        alpha = min(1, (score_prop / score_curr))
+        alpha = min(1, (score_prop / score_curr) * (trans_in / trans_out))
         beta = uniform(0, 1)
 
         if alpha > beta:
