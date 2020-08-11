@@ -134,8 +134,8 @@ def single_plot_params(graph, stat, colour="blue", flat=False):
 
 def distr_plot_params(graph, stat, colour="blue", flat=False):
     """ Generate lists of key plotting parameters based off input graph and
-    desired output statistic.  Colour argument accepts single colour scale of
-    'pink', 'green', 'blue', or 'yellow'. Stat must be a statistic embedded in
+    desired output statistic.  Colours key first off of districts and
+    shades/sizes off a supplied statistic. Stat must be a statistic embedded in
     the graph, such as 'pop'. Returns lists of labels, sizes, and colors, in
     that order """
 
