@@ -2,7 +2,6 @@
 """ Functions for producing logs of chain runs and results and loading them
 back up """
 
-from networkx import graph
 from networkx.readwrite import json_graph
 import json
 
