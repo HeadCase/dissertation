@@ -49,7 +49,7 @@ def score_pop(plan):
 
     # Conditional sets a threshold for the maximum standard deviation allowed
     if std_dev > 60:
-        std_dev = 1000
+        std_dev = 160
 
     return std_dev
 
