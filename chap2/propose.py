@@ -33,14 +33,17 @@ def transistion(graph):
     trans_out = nbors_distrs.count(prop_distr) / len(nbors)
     trans_in = nbors_distrs.count(cur_distr) / len(nbors)
 
-    # trans = {
-    #     "node": sourceNode,
-    #     "prop_distr": prop_distr,
-    #     "trans_out": trans_out,
-    #     "trans_in": trans_in,
-    # }
+    trans = {
+        "node": sourceNode,
+        "prop_distr": prop_distr,
+        "trans_out": trans_out,
+        "trans_in": trans_in,
+    }
 
-    return sourceNode, prop_distr, trans_out, trans_in
+    return trans
+
+
+# sourceNode, prop_distr, trans_out, trans_in
 
 
 # def candidates(graph):
