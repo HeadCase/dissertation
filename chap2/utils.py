@@ -92,3 +92,35 @@ def bfs(node, graph):
                 visited.append(n)
 
     return visited
+
+
+def graph_sig(graph):
+    """ Function which takes in a districting graph and returns a numerical
+    signature of that graph """
+
+    # Start with signature as a string for easy concatenation
+    sig = ""
+
+    for n in list(graph.nodes):
+        sig += str(n)
+        sig += str(graph.nodes[n]["distr"])
+
+    return int(sig)
+
+
+def remove_dups(graph_list):
+    """ Accepts a list of districting graphs and returns a new list without
+    duplicates, where a duplicate is graph with the same district assignments
+    for every node"""
+
+    uniq_sigs = []
+    uniq_graphs = []
+    for graph in graph_list:
+        sig = graph_sig(graph)
+        if sig not in uniq_sigs:
+            uniq_sigs.append(sig)
+            uniq_graphs.append(graph)
+
+    print("{} duplicate plans removed".format(len(graph_list) - len(uniq_graphs)))
+
+    return uniq_graphs
