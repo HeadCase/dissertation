@@ -1,53 +1,48 @@
 #!/usr/bin/env python
 """ Source code for calculating voting totals and statistics"""
 
+import pandas as pd
+
 from utils import distr_count
 from utils import distr_nodes
 
 
-def election(plan):
-    """ Accepts a districting plan and computes results of an election under
-    that plan """
+def election(graph_list, fname=None):
+    """ Accepts a list of graph(s) and computes results of an elections under
+    each districting plan in the list. Returns a dataframe of election results
+    """
 
-    num_distrs = distr_count(plan)
+    results = {}
+    i = 0
+    pcount = 0
 
-    results = {
-        "District 1": {"circles": 0, "squares": 0, "total": 0},
-        "District 2": {"circles": 0, "squares": 0, "total": 0},
-        "District 3": {"circles": 0, "squares": 0, "total": 0},
-        "District 4": {"circles": 0, "squares": 0, "total": 0},
-    }
+    for graph in graph_list:
+        num_distrs = distr_count(graph)
+        plan_id = id(graph)
+        plan_label = pcount
 
-    for distr in range(1, num_distrs + 1):
-        nodes = distr_nodes(distr, plan)
-        for node in nodes:
-            results["District {}".format(distr)]["circles"] += plan.nodes[node][
-                "vote_circ"
-            ]
-            results["District {}".format(distr)]["squares"] += plan.nodes[node][
-                "vote_sqre"
-            ]
-            results["District {}".format(distr)]["total"] += plan.nodes[node]["pop"]
+        for distr in range(1, num_distrs + 1):
+            nodes = distr_nodes(distr, graph)
+            vote_circ = 0
+            vote_sqre = 0
+            total = 0
+            for node in nodes:
+                vote_circ += graph.nodes[node]["vote_circ"]
+                vote_sqre += graph.nodes[node]["vote_sqre"]
+                total += graph.nodes[node]["pop"]
 
-    return results
+            results[i] = [plan_id, plan_label, distr, vote_circ, vote_sqre, total]
+            i += 1
 
+        pcount += 1
 
-def calc_winner(results):
-    """ Accepts dictionary of results and produces dictionary of winner by
-    district """
+    df = pd.DataFrame.from_dict(
+        results,
+        orient="index",
+        columns=["plan_id", "plan_label", "distr", "vote_circ", "vote_sqre", "total"],
+    )
 
-    num_distrs = len(results)
+    if fname:
+        df.to_csv(fname)
 
-    winners = {"District 1": {}, "District 2": {}, "District 3": {}, "District 4": {}}
-    for distr in range(1, num_distrs + 1):
-        total = results["District {}".format(distr)]["total"]
-        circ_pct = results["District {}".format(distr)]["circles"] / total
-        sqre_pct = results["District {}".format(distr)]["squares"] / total
-        if circ_pct > sqre_pct:
-            winners["District {}".format(distr)]["winner"] = "circles"
-            winners["District {}".format(distr)]["percentage"] = circ_pct
-        else:
-            winners["District {}".format(distr)]["winner"] = "squares"
-            winners["District {}".format(distr)]["percentage"] = sqre_pct
-
-    return winners
+    return df
