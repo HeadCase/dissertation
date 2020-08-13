@@ -36,7 +36,6 @@ import matplotlib.pyplot as plt
 # from score import score_pop
 # from score import score_contig
 
-import json
 import sys
 import numpy
 
@@ -48,7 +47,7 @@ def main():
 
     S = init_graph()
 
-    plans = chain(S, 1000, 0.025)
+    plans = chain(S, 2000000, 0.04, "logs/2000000-iters-c-0pt04-stdev-thres-160.csv")
 
     contiguous, reject = reject_islands(plans)
     apport, reject2 = reject_by_pop(contiguous)
@@ -62,11 +61,8 @@ def main():
         )
     )
 
-    # for i in apport:
-    #     print(i.graph["position"])
-
-    to_json(apport, "function-test-dump")
-    readback = from_json("function-test-dump")
+    to_json(apport, "plans/2000000-iters-c-0pt04-stdev-thres-160")
+    # readback = from_json("function-test-dump")
 
     # for plan in plans:
     #     distr_pops = []
@@ -80,28 +76,28 @@ def main():
     #         )
 
     # count = 1
-    for i in readback:
-        # print(i.graph["position"])
-        labs, sizes, colours = distr_plot_params(i, "pop", "purple")
-        pos = i.graph["position"]
-        nlist = list(S.nodes)
+    # for i in readback:
+    #     # print(i.graph["position"])
+    #     labs, sizes, colours = distr_plot_params(i, "pop", "purple")
+    #     pos = i.graph["position"]
+    #     nlist = list(S.nodes)
 
-        # fig = plt.figure()
+    #     # fig = plt.figure()
 
-        draw(
-            i,
-            pos,
-            labels=labs,
-            node_list=nlist,
-            node_color=colours,
-            node_size=3000,
-            font_size=36,
-            node_shape="o",
-        )
+    #     draw(
+    #         i,
+    #         pos,
+    #         labels=labs,
+    #         node_list=nlist,
+    #         node_color=colours,
+    #         node_size=3000,
+    #         font_size=36,
+    #         node_shape="o",
+    #     )
 
-        # plt.savefig("imgs/new-trans-probs-{}.pdf".format(count))
-        # count += 1
-        plt.show()
+    #     # plt.savefig("imgs/new-trans-probs-{}.pdf".format(count))
+    #     # count += 1
+    #     plt.show()
 
     # results = election(S)
     # winners = calc_winner(results)
