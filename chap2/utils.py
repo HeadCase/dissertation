@@ -45,20 +45,27 @@ def contig_distr(distr, graph):
 
     # Produce list of nodes in the district in question
     d_nodes = distr_nodes(distr, graph)
-    init_node = d_nodes[0]
 
-    # Send required arguments to breadth-first search (BFS) algorithm to get a
-    # list of contiguous nodes in the district
-    contig_nodes = bfs(init_node, graph)
-
-    # While the code above initialises with the first node in the district, it
-    # doesn't really matter. If the BFS returns any list of contiguous nodes
-    # that is not exactly the same as the full list of nodes in the district,
-    # the district cannot be contiguous
-    if set(d_nodes) == set(contig_nodes):
-        return True
-    else:
+    # A proposal plan which eliminates a district will get rejected 100% of the
+    # time due to transition probabilities, but this function is called first.
+    # Hence we return false if a district has no nodes
+    if not d_nodes:
         return False
+    else:
+        init_node = d_nodes[0]
+
+        # Send required arguments to breadth-first search (BFS) algorithm to
+        # get a list of contiguous nodes in the district
+        contig_nodes = bfs(init_node, graph)
+
+        # While the code above initialises with the first node in the district, it
+        # doesn't really matter. If the BFS returns any list of contiguous nodes
+        # that is not exactly the same as the full list of nodes in the district,
+        # the district cannot be contiguous
+        if set(d_nodes) == set(contig_nodes):
+            return True
+        else:
+            return False
 
 
 def bfs(node, graph):
