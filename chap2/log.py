@@ -17,7 +17,7 @@ def to_json(list, fname):
         master["graph-{}".format(count)] = data
         count += 1
 
-    with open("{}.json".format(fname), "w") as f:
+    with open("{}".format(fname), "w") as f:
         json.dump(master, f, indent=2)
 
 
@@ -25,7 +25,7 @@ def from_json(fname):
     """ Load json file of graph(s) and stuff them into a list of networkx
     graphs"""
 
-    with open("{}.json".format(fname)) as f:
+    with open("{}".format(fname)) as f:
         master = json.load(f)
 
     graphs = []
