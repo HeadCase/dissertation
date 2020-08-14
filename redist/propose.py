@@ -14,7 +14,8 @@ def transistion(graph):
 
     # Acquire a source node at random from the full set of available nodes and
     # produce a list of districts of its neighbouring nodes
-    sourceNode = rint(1, 36)
+    ncount = len(list(graph.nodes))
+    sourceNode = rint(1, ncount)
     nbors = list(graph.neighbors(sourceNode))
     nbors_distrs = []
     for node in nbors:
