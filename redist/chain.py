@@ -5,6 +5,8 @@ from copy import deepcopy as dc
 from random import uniform
 from propose import transistion
 from score import score_plan
+from score import score_contig
+from score import score_pop
 
 import pandas as pd
 
@@ -48,6 +50,10 @@ def chain(init_plan, n, const, fname):
 
             score_curr = score_plan(curr_plan, const)
             score_prop = score_plan(prop_plan, const)
+            pop_curr = score_pop(curr_plan)
+            pop_prop = score_pop(prop_plan)
+            contig_curr = score_contig(curr_plan)
+            contig_prop = score_contig(prop_plan)
 
             alpha = min(1, ((score_prop / score_curr) * (trans_in / trans_out)))
             beta = uniform(0, 1)
@@ -69,6 +75,10 @@ def chain(init_plan, n, const, fname):
                 round(trans_out, 5),
                 round(alpha, 5),
                 round(beta, 5),
+                pop_curr,
+                pop_prop,
+                contig_curr,
+                contig_prop,
                 flag,
             ]
 
@@ -77,6 +87,10 @@ def chain(init_plan, n, const, fname):
                 sourceNode,
                 curr_distr,
                 prop_distr,
+                9999,
+                9999,
+                9999,
+                9999,
                 9999,
                 9999,
                 9999,
@@ -103,6 +117,10 @@ def chain(init_plan, n, const, fname):
             "transOut",
             "alpha",
             "beta",
+            "pop_curr",
+            "pop_prop",
+            "contig_curr",
+            "contig_prop",
             "outcome",
         ],
     )

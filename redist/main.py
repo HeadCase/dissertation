@@ -2,13 +2,13 @@
 """ Main function """
 
 # Imports
-from init import init_graph
+from init import init_grid
+from init import init_expanded
 from reject import reject_islands
 from reject import reject_by_pop
 from chain import chain
 from utils import remove_dups
 from election import election
-from election import calc_winner
 
 # from log import to_json
 
@@ -49,11 +49,45 @@ numpy.set_printoptions(threshold=sys.maxsize)
 def main():
     """ Main function """
 
-    legal_plans = from_json("plans/2000000-iters-c-0pt04-stdev-thres-160.json")
-    uniq_lgl_plans = remove_dups(legal_plans)
+    S = init_expanded()
+
+    plans = chain(S, 500000, 0.04, "logs/500000-test-expand-graph.csv")
+
+    contiguous, reject = reject_islands(plans)
+    apport, reject2 = reject_by_pop(contiguous)
+    # # reject.extend(reject2)
+
+    print("{} raw plans".format(len(plans)))
+    print("Kept {} clean plans".format(len(apport)))
+    print(
+        "Rejected {} malapportioned plans and {} non-contiguous plans".format(
+            len(reject2), len(reject)
+        )
+    )
+
+    for i in apport:
+        labs, sizes, colours = distr_plot_params(i, "pop", "purple")
+        pos = i.graph["position"]
+        nlist = list(S.nodes)
+
+        draw(
+            i,
+            pos,
+            labels=labs,
+            node_list=nlist,
+            node_color=colours,
+            node_size=3000,
+            font_size=36,
+            node_shape="o",
+        )
+
+        plt.show()
+
+    # legal_plans = from_json("plans/2000000-iters-c-0pt04-stdev-thres-160.json")
+    # uniq_lgl_plans = remove_dups(legal_plans)
     # subset = uniq_lgl_plans[:10]
 
-    election(uniq_lgl_plans, "elections/2mil-iter-results.csv")
+    # election(uniq_lgl_plans, "elections/2mil-iter-results.csv")
 
     # for plan in subset:
     #     results = election(plan)
