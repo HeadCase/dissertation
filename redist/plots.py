@@ -3,10 +3,16 @@
 
 # Imports
 from init import init_expanded
+from init import gerry
+from log import from_json
+from utils import distr_pop
+from utils import distr_count
+from utils import remove_dups
 from draw import single_plot_params
 from draw import distr_plot_params
 from draw import remappedColorMap
 
+from statistics import pstdev
 import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -19,6 +25,83 @@ mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
 
 def main():
     """ Main function """
+
+    S = init_expanded()
+
+    labs, sizes, colours = distr_plot_params(S, "pop", "blue")
+    pos = S.graph["position"]
+    nlist = list(S.nodes)
+
+    plt.figure(figsize=(19, 15))
+    nx.draw(
+        S,
+        pos,
+        labels=labs,
+        node_list=nlist,
+        node_color=colours,
+        node_size=sizes,
+        font_size=40,
+        node_shape="o",
+        # cmap=plt.cm.RdYlGn,
+    )
+    plt.show()
+
+    S = gerry(S)
+
+    labs, sizes, colours = distr_plot_params(S, "pop", "blue")
+    pos = S.graph["position"]
+    nlist = list(S.nodes)
+
+    plt.figure(figsize=(19, 15))
+    nx.draw(
+        S,
+        pos,
+        labels=labs,
+        node_list=nlist,
+        node_color=colours,
+        node_size=sizes,
+        font_size=40,
+        node_shape="o",
+        # cmap=plt.cm.RdYlGn,
+    )
+    plt.show()
+
+    # plans = from_json("plans/1000000-iters-exp-graph-working-params.json")
+    # uniq_lgl_plans = remove_dups(plans)
+
+    # count = 1
+    # for plan in uniq_lgl_plans:
+    #     distr_pops = []
+    #     dcnt = distr_count(plan)
+    #     for distr in range(1, dcnt + 1):
+    #         distr_pops.append(distr_pop(distr, plan))
+    #     if 0 < pstdev(distr_pops) <= 5:
+    #         print(
+    #             "Plan {} districts have population: {} (std dev:{})".format(
+    #                 1 + uniq_lgl_plans.index(plan),
+    #                 distr_pops,
+    #                 round(pstdev(distr_pops), 1),
+    #             )
+    #         )
+    #         labs, sizes, colours = distr_plot_params(plan, "pop", "blue")
+    #         pos = plan.graph["position"]
+    #         nlist = list(plan.nodes)
+
+    #         plt.figure(figsize=(19, 15))
+    #         nx.draw(
+    #             plan,
+    #             pos,
+    #             labels=labs,
+    #             node_list=nlist,
+    #             node_color=colours,
+    #             node_size=sizes,
+    #             font_size=40,
+    #             node_shape="o",
+    #             # cmap=plt.cm.RdYlGn,
+    #         )
+    #         # plt.show()
+    #         plt.savefig("imgs/1mil-exp-graph-under5-stdev-{}.pdf".format(count))
+    #         count += 1
 
     # # col_map = colour_scale(all=True)
     # # print(col_map[1])
@@ -48,56 +131,34 @@ def main():
     # Special sauce for heatmaps to get the colour scale zero-centred. For
     # circle margins, need to define end but leave start at default, vice-versa
     # for square margin
-    S = init_expanded()
-    labs, sizes, colours = single_plot_params(S, "circ_marg", "blue", flat=False)
-    pos = S.graph["position"]
-    nlist = list(S.nodes)
-    # marg is a dict, so first index is the margin value for the given node
-    colours = [marg[1] for marg in S.nodes.data("circ_marg")]
-    # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
+    # S = init_expanded()
+    # labs, sizes, colours = single_plot_params(S, "circ_marg", "blue", flat=False)
+    # pos = S.graph["position"]
+    # nlist = list(S.nodes)
+    # # marg is a dict, so first index is the margin value for the given node
+    # colours = [marg[1] for marg in S.nodes.data("circ_marg")]
+    # # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
 
-    vmin = min(colours)
-    vmax = max(colours)
-    mpoint = abs(vmin) / (vmax + abs(vmin))
+    # vmin = min(colours)
+    # vmax = max(colours)
+    # mpoint = abs(vmin) / (vmax + abs(vmin))
 
-    rdylgn = plt.cm.RdYlGn
-    heat_cmap = remappedColorMap(rdylgn, midpoint=mpoint)
+    # rdylgn = plt.cm.RdYlGn
+    # heat_cmap = remappedColorMap(rdylgn, midpoint=mpoint)
 
-    nx.draw(
-        S,
-        pos,
-        labels=labs,
-        node_list=nlist,
-        node_color=colours,
-        node_size=8000,
-        font_size=40,
-        node_shape="o",
-        cmap=heat_cmap,
-    )
-    plt.show()
+    # nx.draw(
+    #     S,
+    #     pos,
+    #     labels=labs,
+    #     node_list=nlist,
+    #     node_color=colours,
+    #     node_size=8000,
+    #     font_size=40,
+    #     node_shape="o",
+    #     cmap=heat_cmap,
+    # )
+    # plt.show()
 
 
 if __name__ == "__main__":
     main()
-
-# def remappedColorMap(cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"):
-#     """
-#     Function to offset the median value of a colormap, and scale the
-#     remaining color range. Useful for data with a negative minimum and
-#     positive maximum where you want the middle of the colormap's dynamic
-#     range to be at zero.
-#     Input
-#     -----
-#       cmap : The matplotlib colormap to be altered
-#       start : Offset from lowest point in the colormap's range.
-#           Defaults to 0.0 (no lower ofset). Should be between
-#           0.0 and 0.5; if your dataset mean is negative you should leave
-#           this at 0.0, otherwise to (vmax-abs(vmin))/(2*vmax)
-#       midpoint : The new center of the colormap. Defaults to
-#           0.5 (no shift). Should be between 0.0 and 1.0; usually the
-#           optimal value is abs(vmin)/(vmax+abs(vmin))
-#       stop : Offset from highets point in the colormap's range.
-#           Defaults to 1.0 (no upper ofset). Should be between
-#           0.5 and 1.0; if your dataset mean is positive you should leave
-#           this at 1.0, otherwise to (abs(vmin)-vmax)/(2*abs(vmin))
-#     """

@@ -416,7 +416,7 @@ def init_expanded():
         15: 13,
         16: 21,
         3: 11,
-        4: 9,
+        4: 7,
         11: 17,
         12: 8,
         19: 17,
@@ -479,7 +479,7 @@ def init_expanded():
         15: 15,
         16: 16,
         3: 12,
-        4: 8,
+        4: 10,
         11: 15,
         12: 14,
         19: 16,
@@ -564,5 +564,73 @@ def init_expanded():
 
     for n in list(graph.nodes):
         graph.nodes[n]["node label"] = n
+
+    return graph
+
+
+def gerry(graph):
+    """ Accepts freshly initiated expanded graph and alters districts
+    assignments to square-favouring gerrymander """
+
+    graph.nodes[1]["distr"] = 1
+    graph.nodes[2]["distr"] = 1
+    graph.nodes[3]["distr"] = 2
+    graph.nodes[4]["distr"] = 2
+    graph.nodes[5]["distr"] = 4
+    graph.nodes[6]["distr"] = 4
+    graph.nodes[7]["distr"] = 1
+    graph.nodes[8]["distr"] = 1
+    graph.nodes[9]["distr"] = 1
+    graph.nodes[10]["distr"] = 1
+    graph.nodes[11]["distr"] = 2
+    graph.nodes[12]["distr"] = 2
+    graph.nodes[13]["distr"] = 4
+    graph.nodes[14]["distr"] = 4
+    graph.nodes[15]["distr"] = 1
+    graph.nodes[16]["distr"] = 1
+    graph.nodes[17]["distr"] = 1
+    graph.nodes[18]["distr"] = 2
+    graph.nodes[19]["distr"] = 2
+    graph.nodes[20]["distr"] = 2
+    graph.nodes[21]["distr"] = 4
+    graph.nodes[22]["distr"] = 4
+    graph.nodes[23]["distr"] = 3
+    graph.nodes[24]["distr"] = 3
+    graph.nodes[25]["distr"] = 3
+    graph.nodes[26]["distr"] = 2
+    graph.nodes[27]["distr"] = 2
+    graph.nodes[28]["distr"] = 5
+    graph.nodes[29]["distr"] = 5
+    graph.nodes[30]["distr"] = 5
+    graph.nodes[31]["distr"] = 4
+    graph.nodes[32]["distr"] = 6
+    graph.nodes[33]["distr"] = 6
+    graph.nodes[34]["distr"] = 3
+    graph.nodes[35]["distr"] = 3
+    graph.nodes[36]["distr"] = 3
+    graph.nodes[37]["distr"] = 5
+    graph.nodes[38]["distr"] = 5
+    graph.nodes[39]["distr"] = 5
+    graph.nodes[40]["distr"] = 4
+    graph.nodes[41]["distr"] = 6
+    graph.nodes[42]["distr"] = 6
+    graph.nodes[43]["distr"] = 6
+    graph.nodes[44]["distr"] = 6
+    graph.nodes[45]["distr"] = 5
+    graph.nodes[46]["distr"] = 5
+    graph.nodes[47]["distr"] = 5
+    graph.nodes[48]["distr"] = 6
+    graph.nodes[49]["distr"] = 4
+    graph.nodes[50]["distr"] = 4
+    graph.nodes[51]["distr"] = 6
+    graph.nodes[52]["distr"] = 5
+    graph.nodes[53]["distr"] = 5
+    graph.nodes[54]["distr"] = 6
+    graph.nodes[55]["distr"] = 4
+    graph.nodes[56]["distr"] = 6
+    graph.nodes[57]["distr"] = 6
+    graph.nodes[58]["distr"] = 6
+    graph.nodes[59]["distr"] = 6
+    graph.nodes[60]["distr"] = 6
 
     return graph
