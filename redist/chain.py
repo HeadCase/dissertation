@@ -34,6 +34,17 @@ def chain(init_plan, n, const, fname):
     # values hold a list of logging data
     log = {}
 
+    # Instantiate variables for logging
+    score_curr = 0
+    score_prop = 0
+    pop_curr = 0
+    pop_prop = 0
+    contig_curr = 0
+    contig_prop = 0
+    alpha = 0
+    beta = 0
+    flag = ""
+
     while i < n:
 
         trans = transistion(curr_plan)
@@ -64,41 +75,43 @@ def chain(init_plan, n, const, fname):
                 flag = "accept"
             else:
                 flag = "reject"
-
-            log[i] = [
-                sourceNode,
-                curr_distr,
-                prop_distr,
-                round(score_curr, 5),
-                round(trans_in, 5),
-                round(score_prop, 5),
-                round(trans_out, 5),
-                round(alpha, 5),
-                round(beta, 5),
-                pop_curr,
-                pop_prop,
-                contig_curr,
-                contig_prop,
-                flag,
-            ]
-
         else:
-            log[i] = [
-                sourceNode,
-                curr_distr,
-                prop_distr,
-                9999,
-                9999,
-                9999,
-                9999,
-                9999,
-                9999,
-                9999,
-                9999,
-                9999,
-                9999,
-                "reject",
-            ]
+            flag = "repeat"
+
+        log[i] = [
+            sourceNode,
+            curr_distr,
+            prop_distr,
+            round(score_curr, 3),
+            round(score_prop, 3),
+            round(pop_curr, 3),
+            round(pop_prop, 3),
+            round(contig_curr, 3),
+            round(contig_prop, 3),
+            round(trans_in, 3),
+            round(trans_out, 3),
+            round(alpha, 3),
+            round(beta, 3),
+            flag,
+        ]
+
+        # else:
+        #     log[i] = [
+        #         sourceNode,
+        #         curr_distr,
+        #         prop_distr,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         9999,
+        #         "reject",
+        #     ]
 
         if i % 100 == 0:
             print("------ End iteration {} ------".format(i))
@@ -112,15 +125,15 @@ def chain(init_plan, n, const, fname):
             "currDistr",
             "propDistr",
             "scoreCurr",
-            "transIn",
             "scoreProp",
-            "transOut",
-            "alpha",
-            "beta",
             "pop_curr",
             "pop_prop",
             "contig_curr",
             "contig_prop",
+            "transIn",
+            "transOut",
+            "alpha",
+            "beta",
             "outcome",
         ],
     )
