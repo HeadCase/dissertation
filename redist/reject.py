@@ -66,7 +66,7 @@ def reject_by_pop(plans):
             for node in nodes_in_distr:
                 total_pop += graph.nodes[node]["pop"]
 
-            if total_pop > 255 or total_pop < 245:
+            if total_pop > 263 or total_pop < 237:
                 distr_check = False
 
             graph_check.append(distr_check)
