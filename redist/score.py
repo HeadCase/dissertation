@@ -46,12 +46,13 @@ def score_pop(plan):
     # pstdev is the standard library standard deviation function for an
     # iterable input
     std_dev = pstdev(distr_pops)
+    var = std_dev ** 2
 
     # Conditional sets a threshold for the maximum standard deviation allowed
-    if std_dev > 60:
-        std_dev = 115
+    # if std_dev > 60:
+    #     std_dev = 115
 
-    return std_dev
+    return var
 
 
 def score_contig(plan):
