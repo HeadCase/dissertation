@@ -142,3 +142,4 @@ imgs/
 *.svg
 *.pdf
 *.png
+.Rproj.user
