@@ -5,6 +5,7 @@ library(tidyverse)
 # library(scales)
 library(extrafont)
 library(extrafontdb)
+
 loadfonts()
 fonts()
 
@@ -43,7 +44,10 @@ elect <- mutate(elect, circ_marg = (vote_circ / total - vote_sqre / total) * 100
 elect <- mutate(elect, winner = ifelse(circ_marg > sqre_marg,'circle', 'square'))
 
   
-ggplot(elect, aes(total))+geom_histogram(binwidth = 1)
+ggplot(elect, aes(total))+geom_histogram(binwidth = 1, color='#4C67A5', fill='#D2D9EB')
+ggsave("../../diss/classicthesis/gfx/total-pop-hist.pdf", width = 4, height = 3)
+embed_fonts("../../diss/classicthesis/gfx/total-pop-hist.pdf",outfile="../../diss/classicthesis/gfx/total-pop-hist-embed.pdf")
+
 
 ggplot(elect, aes(distr, total, group = distr, fill = distr)) +
   geom_boxplot() +
@@ -60,7 +64,8 @@ ggplot(elect, aes(distr, sqre_marg, group = distr, fill = distr)) +
 distrs = group_by(elect, distr)  
 win_count_by_plan = group_by(elect, plan_label) %>% count(winner)
 
-ggplot(distrs, aes(distr))+geom_histogram(stat='count')+facet_wrap(~winner)
+ggplot(distrs, aes(distr,fill=distr))+geom_histogram(stat='count')+facet_wrap(~winner)+
+  scale_fill_manual(name='District', values = c("#46AC90", "#FA6A34", "#6981BA", "#DF5EAE", "#89BF2B", "#E6BC00"))
 
 ggplot(win_count_by_plan, aes(n))+geom_histogram(binwidth = 1)+facet_wrap(~winner)
 
