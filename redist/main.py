@@ -2,22 +2,22 @@
 """ Main function """
 
 # Imports
-# from init import init_expanded
-# from reject import reject_islands
-# from reject import reject_by_pop
-# from chain import chain
-# from log import to_json
-
-from log import from_json
-from utils import distr_pop
-from utils import distr_count
+from init import init_expanded
+from reject import reject_islands
+from reject import reject_by_pop
+from chain import chain
+from log import to_json
 from utils import remove_dups
-from draw import distr_plot_params
-from election import election
 
-from statistics import pstdev
-from networkx import draw
-import matplotlib.pyplot as plt
+# from log import from_json
+# from utils import distr_pop
+# from utils import distr_count
+# from draw import distr_plot_params
+# from election import election
+
+# from statistics import pstdev
+# from networkx import draw
+# import matplotlib.pyplot as plt
 import sys
 import numpy
 
@@ -41,65 +41,77 @@ numpy.set_printoptions(threshold=sys.maxsize)
 def main():
     """ Main function """
 
-    # S = init_expanded()
+    basename = "4mil-const00pt25-contig20-variance"
+    S = init_expanded()
+
+    plans = chain(S, 10000, 0.0025, "logs/{}".format(basename))
+
+    with open("logs/{}.txt".format(basename), "a+") as f:
+        sys.stdout = f
+        print("\nRun complete.\n")
+
+        contiguous, reject = reject_islands(plans)
+        apport, reject2 = reject_by_pop(contiguous)
+
+        print("{} raw plans".format(len(plans)))
+        print("Kept {} clean plans".format(len(apport)))
+        print(
+            "Rejected {} malapportioned plans and {} non-contiguous plans".format(
+                len(reject2), len(reject)
+            )
+        )
+
+        remove_dups(apport)
+
+        to_json(apport, "plans/{}.json".format(basename))
 
     # plans = chain(
     #     S, 1000000, 0.0025, "logs/1000000-iters-exp-graph-working-params-full-log.csv"
     # )
 
-    # contiguous, reject = reject_islands(plans)
-    # apport, reject2 = reject_by_pop(contiguous)
-    # # # reject.extend(reject2)
-
-    # print("{} raw plans".format(len(plans)))
-    # print("Kept {} clean plans".format(len(apport)))
-    # print(
-    #     "Rejected {} malapportioned plans and {} non-contiguous plans".format(
-    #         len(reject2), len(reject)
-    #     )
-    # )
+    # # reject.extend(reject2)
 
     # to_json(apport, "plans/1000000-iters-exp-graph-working-params.json")
 
-    legal_plans = from_json("plans/1000000-iters-exp-graph-working-params.json")
-    uniq_lgl_plans = remove_dups(legal_plans)
+    # legal_plans = from_json("plans/1000000-iters-exp-graph-working-params.json")
+    # uniq_lgl_plans = remove_dups(legal_plans)
 
-    election(uniq_lgl_plans, "elections/1mil-iters-exp-graph.csv")
+    # election(uniq_lgl_plans, "elections/1mil-iters-exp-graph.csv")
 
-    # count = 1
-    for plan in uniq_lgl_plans:
-        distr_pops = []
-        dcnt = distr_count(plan)
-        for distr in range(1, dcnt + 1):
-            distr_pops.append(distr_pop(distr, plan))
-        if 0 < pstdev(distr_pops) <= 7:
-            print(
-                "Plan {} districts have population: {} (std dev:{})".format(
-                    1 + uniq_lgl_plans.index(plan),
-                    distr_pops,
-                    round(pstdev(distr_pops), 1),
-                )
-            )
+    # # count = 1
+    # for plan in uniq_lgl_plans:
+    #     distr_pops = []
+    #     dcnt = distr_count(plan)
+    #     for distr in range(1, dcnt + 1):
+    #         distr_pops.append(distr_pop(distr, plan))
+    #     if 0 < pstdev(distr_pops) <= 7:
+    #         print(
+    #             "Plan {} districts have population: {} (std dev:{})".format(
+    #                 1 + uniq_lgl_plans.index(plan),
+    #                 distr_pops,
+    #                 round(pstdev(distr_pops), 1),
+    #             )
+    #         )
 
-            # labs, sizes, colours = distr_plot_params(plan, "pop", "purple")
-            # pos = plan.graph["position"]
-            # nlist = list(plan.nodes)
+    # labs, sizes, colours = distr_plot_params(plan, "pop", "purple")
+    # pos = plan.graph["position"]
+    # nlist = list(plan.nodes)
 
-            # plt.figure(figsize=(19, 15))
+    # plt.figure(figsize=(19, 15))
 
-            # draw(
-            #     plan,
-            #     pos,
-            #     labels=labs,
-            #     node_list=nlist,
-            #     node_color=colours,
-            #     node_size=sizes,
-            #     font_size=36,
-            #     node_shape="o",
-            # )
+    # draw(
+    #     plan,
+    #     pos,
+    #     labels=labs,
+    #     node_list=nlist,
+    #     node_color=colours,
+    #     node_size=sizes,
+    #     font_size=36,
+    #     node_shape="o",
+    # )
 
-            # plt.savefig("imgs/100k-iters-exp-graph-good-params-{}.pdf".format(count))
-            # count += 1
+    # plt.savefig("imgs/100k-iters-exp-graph-good-params-{}.pdf".format(count))
+    # count += 1
 
     # S = init_graph()
 
