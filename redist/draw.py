@@ -212,6 +212,7 @@ def distr_plot_params(graph, stat, colour="blue", flat=False):
 
 
 # authors ="Paul H, Horea Christian"
+# https://github.com/TheChymera/chr-helpers
 def remappedColorMap(cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"):
     """
     Function to offset the median value of a colormap, and scale the
