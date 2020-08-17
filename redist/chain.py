@@ -7,6 +7,8 @@ from propose import transistion
 from score import score_plan
 from score import score_contig
 from score import score_pop
+import timeit
+from time import ctime
 
 import pandas as pd
 
@@ -44,8 +46,10 @@ def chain(init_plan, n, const, fname):
     alpha = 0
     beta = 0
     flag = ""
+    lcount = 1
+    start = timeit.default_timer()
 
-    while i < n:
+    while i <= n:
 
         trans = transistion(curr_plan)
         sourceNode = trans["node"]
@@ -114,30 +118,70 @@ def chain(init_plan, n, const, fname):
         #     ]
 
         if i % 100 == 0:
-            print("------ End iteration {} ------".format(i))
+            stop = timeit.default_timer()
+            print(
+                "{} | Runtime:{:06.2f} | iter:{:.>10}".format(
+                    ctime(), (stop - start), i
+                )
+            )
+
+            with open("{}.txt".format(fname), "a+") as f:
+                print(
+                    "{} | Runtime:{:06.2f} | iter:{:.>10}".format(
+                        ctime(), (stop - start), i
+                    ),
+                    file=f,
+                )
+
+        if i == n:
+            df = pd.DataFrame.from_dict(
+                log,
+                orient="index",
+                columns=[
+                    "sourceNode",
+                    "currDistr",
+                    "propDistr",
+                    "scoreCurr",
+                    "scoreProp",
+                    "pop_curr",
+                    "pop_prop",
+                    "contig_curr",
+                    "contig_prop",
+                    "transIn",
+                    "transOut",
+                    "alpha",
+                    "beta",
+                    "outcome",
+                ],
+            )
+            df.to_csv("{}-{}.csv".format(fname, lcount))
+
+        if i % (n / 8) == 0:
+            df = pd.DataFrame.from_dict(
+                log,
+                orient="index",
+                columns=[
+                    "sourceNode",
+                    "currDistr",
+                    "propDistr",
+                    "scoreCurr",
+                    "scoreProp",
+                    "pop_curr",
+                    "pop_prop",
+                    "contig_curr",
+                    "contig_prop",
+                    "transIn",
+                    "transOut",
+                    "alpha",
+                    "beta",
+                    "outcome",
+                ],
+            )
+
+            df.to_csv("{}-{}.csv".format(fname, lcount))
+            lcount += 1
+            log = {}
+
         i += 1
-
-    df = pd.DataFrame.from_dict(
-        log,
-        orient="index",
-        columns=[
-            "sourceNode",
-            "currDistr",
-            "propDistr",
-            "scoreCurr",
-            "scoreProp",
-            "pop_curr",
-            "pop_prop",
-            "contig_curr",
-            "contig_prop",
-            "transIn",
-            "transOut",
-            "alpha",
-            "beta",
-            "outcome",
-        ],
-    )
-
-    df.to_csv(fname)
 
     return plans
