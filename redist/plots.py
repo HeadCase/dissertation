@@ -28,27 +28,7 @@ def main():
 
     S = init_expanded()
 
-    # labs, sizes, colours = distr_plot_params(S, "vote_sqre", "blue")
-    # pos = S.graph["position"]
-    # nlist = list(S.nodes)
-
-    # plt.figure(figsize=(19, 15))
-    # nx.draw(
-    #     S,
-    #     pos,
-    #     labels=labs,
-    #     node_list=nlist,
-    #     node_color=colours,
-    #     node_size=sizes,
-    #     font_size=40,
-    #     node_shape="o",
-    #     # cmap=plt.cm.RdYlGn,
-    # )
-    # plt.show()
-
-    S = gerry(S)
-
-    labs, sizes, colours = distr_plot_params(S, "pop", "blue")
+    labs, sizes, colours = distr_plot_params(S, "node label", "blue")
     pos = S.graph["position"]
     nlist = list(S.nodes)
 
@@ -65,6 +45,26 @@ def main():
         # cmap=plt.cm.RdYlGn,
     )
     plt.show()
+
+    # S = gerry(S)
+
+    # labs, sizes, colours = distr_plot_params(S, "pop", "blue")
+    # pos = S.graph["position"]
+    # nlist = list(S.nodes)
+
+    # plt.figure(figsize=(19, 15))
+    # nx.draw(
+    #     S,
+    #     pos,
+    #     labels=labs,
+    #     node_list=nlist,
+    #     node_color=colours,
+    #     node_size=sizes,
+    #     font_size=40,
+    #     node_shape="o",
+    #     # cmap=plt.cm.RdYlGn,
+    # )
+    # plt.show()
 
     # plans = from_json("plans/1000000-iters-exp-graph-working-params.json")
     # uniq_lgl_plans = remove_dups(plans)
