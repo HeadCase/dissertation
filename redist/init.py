@@ -574,9 +574,9 @@ def gerry(graph):
 
     graph.nodes[1]["distr"] = 4
     graph.nodes[2]["distr"] = 1
-    graph.nodes[3]["distr"] = 2
+    graph.nodes[3]["distr"] = 1
     graph.nodes[4]["distr"] = 2
-    graph.nodes[5]["distr"] = 4
+    graph.nodes[5]["distr"] = 2
     graph.nodes[6]["distr"] = 4
     graph.nodes[7]["distr"] = 1
     graph.nodes[8]["distr"] = 1
