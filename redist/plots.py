@@ -28,7 +28,7 @@ def main():
 
     S = init_expanded()
 
-    # labs, sizes, colours = single_plot_params(S, "pop", "blue")
+    # labs, sizes, colours = distr_plot_params(S, "vote_sqre", "blue")
     # pos = S.graph["position"]
     # nlist = list(S.nodes)
 
@@ -46,25 +46,25 @@ def main():
     # )
     # plt.show()
 
-    # S = gerry(S)
+    S = gerry(S)
 
-    # labs, sizes, colours = distr_plot_params(S, "pop", "blue")
-    # pos = S.graph["position"]
-    # nlist = list(S.nodes)
+    labs, sizes, colours = distr_plot_params(S, "pop", "blue")
+    pos = S.graph["position"]
+    nlist = list(S.nodes)
 
-    # plt.figure(figsize=(19, 15))
-    # nx.draw(
-    #     S,
-    #     pos,
-    #     labels=labs,
-    #     node_list=nlist,
-    #     node_color=colours,
-    #     node_size=sizes,
-    #     font_size=40,
-    #     node_shape="o",
-    #     # cmap=plt.cm.RdYlGn,
-    # )
-    # plt.show()
+    plt.figure(figsize=(19, 15))
+    nx.draw(
+        S,
+        pos,
+        labels=labs,
+        node_list=nlist,
+        node_color=colours,
+        node_size=sizes,
+        font_size=40,
+        node_shape="o",
+        # cmap=plt.cm.RdYlGn,
+    )
+    plt.show()
 
     # plans = from_json("plans/1000000-iters-exp-graph-working-params.json")
     # uniq_lgl_plans = remove_dups(plans)
@@ -132,32 +132,32 @@ def main():
     # circle margins, need to define end but leave start at default, vice-versa
     # for square margin
     # S = init_expanded()
-    labs, sizes, colours = single_plot_params(S, "sqre_marg", "blue", flat=False)
-    pos = S.graph["position"]
-    nlist = list(S.nodes)
-    # marg is a dict, so first index is the margin value for the given node
-    colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
+    # labs, sizes, colours = single_plot_params(S, "sqre_marg", "blue", flat=False)
+    # pos = S.graph["position"]
+    # nlist = list(S.nodes)
+    # # marg is a dict, so first index is the margin value for the given node
     # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
+    # # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
 
-    vmin = min(colours)
-    vmax = max(colours)
-    mpoint = abs(vmin) / (vmax + abs(vmin))
+    # vmin = min(colours)
+    # vmax = max(colours)
+    # mpoint = abs(vmin) / (vmax + abs(vmin))
 
-    rdylgn = plt.cm.RdYlGn
-    heat_cmap = remappedColorMap(rdylgn, midpoint=mpoint)
+    # rdylgn = plt.cm.RdYlGn
+    # heat_cmap = remappedColorMap(rdylgn, midpoint=mpoint)
 
-    nx.draw(
-        S,
-        pos,
-        labels=labs,
-        node_list=nlist,
-        node_color=colours,
-        node_size=8000,
-        font_size=40,
-        node_shape="s",
-        cmap=heat_cmap,
-    )
-    plt.show()
+    # nx.draw(
+    #     S,
+    #     pos,
+    #     labels=labs,
+    #     node_list=nlist,
+    #     node_color=colours,
+    #     node_size=8000,
+    #     font_size=40,
+    #     node_shape="s",
+    #     cmap=heat_cmap,
+    # )
+    # plt.show()
 
 
 if __name__ == "__main__":
