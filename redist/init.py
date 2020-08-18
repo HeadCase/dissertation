@@ -215,12 +215,12 @@ def init_expanded():
     # Delete nodes to give shape
     rm_list = [
         1,
-        2,
         5,
         6,
         9,
         10,
         11,
+        12,
         20,
         21,
         22,
@@ -259,11 +259,11 @@ def init_expanded():
 
     # Sequential integer labels have been messed up by deletion so remap them
     mapping = {
-        3: 1,
-        4: 2,
-        7: 3,
-        8: 4,
-        12: 5,
+        2: 1,
+        3: 2,
+        4: 3,
+        7: 4,
+        8: 5,
         13: 6,
         14: 7,
         15: 8,
@@ -330,8 +330,8 @@ def init_expanded():
 
     # District assignments
     dists = {
-        1: [1, 2, 5, 6, 7, 8, 9, 10, 15, 16],
-        2: [3, 4, 11, 12, 19, 20, 27, 28, 29, 30],
+        1: [1, 2, 3, 6, 7, 8, 9, 10, 15, 16],
+        2: [4, 5, 11, 12, 19, 20, 27, 28, 29, 30],
         3: [17, 18, 24, 25, 26, 34],
         4: [13, 14, 21, 22, 23, 31, 32, 40, 49],
         5: [35, 36, 37, 38, 39, 45, 46, 47, 52, 53],
@@ -342,9 +342,9 @@ def init_expanded():
     # acceptance test and for identifying population balanced districts
     # Ordering of dictionary is based off districting assignments
     pop = {
-        1: 16,
-        2: 12,
-        5: 19,
+        1: 19,
+        2: 16,
+        3: 12,
         6: 21,
         7: 22,
         8: 28,
@@ -352,8 +352,8 @@ def init_expanded():
         10: 36,
         15: 28,
         16: 37,
-        3: 23,
-        4: 17,
+        4: 23,
+        5: 17,
         11: 32,
         12: 22,
         19: 33,
@@ -405,9 +405,9 @@ def init_expanded():
     }
 
     vote_circ = {
-        1: 4,
-        2: 3,
-        5: 7,
+        1: 7,
+        2: 4,
+        3: 3,
         6: 10,
         7: 9,
         8: 13,
@@ -415,8 +415,8 @@ def init_expanded():
         10: 21,
         15: 13,
         16: 21,
-        3: 11,
-        4: 7,
+        4: 11,
+        5: 7,
         11: 17,
         12: 8,
         19: 17,
@@ -469,8 +469,8 @@ def init_expanded():
 
     vote_sqre = {
         1: 12,
-        2: 9,
-        5: 12,
+        2: 12,
+        3: 9,
         6: 11,
         7: 13,
         8: 15,
@@ -478,8 +478,8 @@ def init_expanded():
         10: 15,
         15: 15,
         16: 16,
-        3: 12,
-        4: 10,
+        4: 12,
+        5: 10,
         11: 15,
         12: 14,
         19: 16,
@@ -572,7 +572,7 @@ def gerry(graph):
     """ Accepts freshly initiated expanded graph and alters districts
     assignments to square-favouring gerrymander """
 
-    graph.nodes[1]["distr"] = 1
+    graph.nodes[1]["distr"] = 4
     graph.nodes[2]["distr"] = 1
     graph.nodes[3]["distr"] = 2
     graph.nodes[4]["distr"] = 2
