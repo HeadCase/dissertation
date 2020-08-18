@@ -120,14 +120,14 @@ def chain(init_plan, n, const, fname):
         if i % 100 == 0:
             stop = timeit.default_timer()
             print(
-                "{} | Runtime:{:06.2f} | iter:{:.>10}".format(
+                "{} | Runtime:{:010.2f} | iter:{:.>10}".format(
                     ctime(), (stop - start), i
                 )
             )
 
             with open("{}.txt".format(fname), "a+") as f:
                 print(
-                    "{} | Runtime:{:06.2f} | iter:{:.>10}".format(
+                    "{} | Runtime:{:010.2f} | iter:{:.>10}".format(
                         ctime(), (stop - start), i
                     ),
                     file=f,

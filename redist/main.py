@@ -41,10 +41,10 @@ numpy.set_printoptions(threshold=sys.maxsize)
 def main():
     """ Main function """
 
-    basename = "4mil-const00pt25-contig20-variance"
+    basename = "reparam-const00pt25-ban-ncontig-variance"
     S = init_expanded()
 
-    plans = chain(S, 10000, 0.0025, "logs/{}".format(basename))
+    plans = chain(S, 40000, 0.0025, "logs/{}".format(basename))
 
     with open("logs/{}.txt".format(basename), "a+") as f:
         sys.stdout = f

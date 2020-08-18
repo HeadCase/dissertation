@@ -68,11 +68,19 @@ def score_contig(plan):
         contig_list.append(contig_distr(i, plan))
 
     # Count the number of disconnected districts
-    num_discon = 0
-    for item in contig_list:
-        if not item:
-            num_discon += 1
+    # num_discon = 0
+    if all(contig_list):
+        score = 1
+    else:
+        score = 1000000
+    # for item in contig_list:
+    #     if not item:
+    #         score = 0
 
-    score = 20 ** num_discon
+    #     else:
+    #         score = 1
+    #         # num_discon += 1
+
+    # # score = 20 ** num_discon
 
     return score
