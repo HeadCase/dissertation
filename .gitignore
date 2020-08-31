@@ -133,6 +133,8 @@ dmypy.json
 
 # Misc dirs
 tinker/
+archive/
+backup/
 MCMC_Intro/
 WI-shapefiles/
 imgs/
