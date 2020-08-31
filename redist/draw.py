@@ -117,7 +117,7 @@ def single_plot_params(graph, stat, colour="blue", flat=False):
         stat_list.append(graph.nodes[n][stat])
         labels[n] = graph.nodes[n][stat]
         if flat:
-            col_map.append(col_pal[4])
+            col_map.append(col_pal[3])
             sizes.append(size_pal[4])
 
     # Deduce interval from statistic range
@@ -193,7 +193,7 @@ def distr_plot_params(graph, stat, colour="blue", flat=False):
             distr = graph.nodes[n]["distr"]
             for j in range(1, d_cnt + 1):
                 if distr == j:
-                    col_map.append(col_pal[col_names[j - 1]][4])
+                    col_map.append(col_pal[col_names[j - 1]][3])
                     sizes.append(size_pal[4])
     else:
         for n in nlist:

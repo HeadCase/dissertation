@@ -26,9 +26,52 @@ mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
 def main():
     """ Main function """
 
+    # prod_run = from_json(
+    #     "plans/4mil-const-pt0025-ban-ncontig-variance-fixed-distr1.json"
+    # )
+    # gerry_plans = [
+    #     276,
+    #     310,
+    #     392,
+    #     401,
+    #     454,
+    #     463,
+    #     499,
+    #     567,
+    #     692,
+    #     710,
+    #     716,
+    #     717,
+    #     920,
+    #     1145,
+    # ]
+
+    # count = 0
+    # for plan in prod_run:
+    #     if count in gerry_plans:
+    #         labs, sizes, colours = distr_plot_params(plan, "distr", "blue", flat=True)
+    #         pos = plan.graph["position"]
+    #         nlist = list(plan.nodes)
+
+    #         plt.figure(figsize=(19, 15))
+    #         nx.draw(
+    #             plan,
+    #             pos,
+    #             labels=labs,
+    #             node_list=nlist,
+    #             node_color=colours,
+    #             node_size=sizes,
+    #             font_size=40,
+    #             node_shape="o",
+    #             # cmap=plt.cm.RdYlGn,
+    #         )
+    #         plt.show()
+    #     count += 1
+
     S = init_expanded()
 
-    labs, sizes, colours = distr_plot_params(S, "node label", "blue")
+    labs, sizes, colours = single_plot_params(S, "pop", "blue")
+    # labs, sizes, colours = distr_plot_params(S, "node label", "blue")
     pos = S.graph["position"]
     nlist = list(S.nodes)
 
@@ -48,7 +91,7 @@ def main():
 
     # S = gerry(S)
 
-    # labs, sizes, colours = distr_plot_params(S, "pop", "blue")
+    # labs, sizes, colours = distr_plot_params(S, "distr", "blue", flat=True)
     # pos = S.graph["position"]
     # nlist = list(S.nodes)
 
@@ -132,15 +175,17 @@ def main():
     # circle margins, need to define end but leave start at default, vice-versa
     # for square margin
     # S = init_expanded()
-    # labs, sizes, colours = single_plot_params(S, "sqre_marg", "blue", flat=False)
+    # labs, sizes, colours = single_plot_params(S, "circ_marg", "blue", flat=False)
     # pos = S.graph["position"]
     # nlist = list(S.nodes)
     # # marg is a dict, so first index is the margin value for the given node
-    # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
+    # colours = [marg[1] for marg in S.nodes.data("circ_marg")]
     # # colours = [marg[1] for marg in S.nodes.data("sqre_marg")]
 
     # vmin = min(colours)
     # vmax = max(colours)
+    # # start = (vmax - abs(vmin)) / (4 * vmax)
+    # # stop = (abs(vmin) - vmax) / (4 * vmin)
     # mpoint = abs(vmin) / (vmax + abs(vmin))
 
     # rdylgn = plt.cm.RdYlGn
@@ -152,9 +197,9 @@ def main():
     #     labels=labs,
     #     node_list=nlist,
     #     node_color=colours,
-    #     node_size=8000,
-    #     font_size=40,
-    #     node_shape="s",
+    #     node_size=sizes,
+    #     font_size=32,
+    #     node_shape="o",
     #     cmap=heat_cmap,
     # )
     # plt.show()

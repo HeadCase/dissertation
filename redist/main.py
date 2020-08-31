@@ -73,7 +73,7 @@ def main():
 
     lgl_plans = from_json("plans/{}.json".format(basename))
     uniq_lgl_plans = remove_dups(lgl_plans)
-    election(uniq_lgl_plans, "elections/{}.csv".format(basename))
+    # election(uniq_lgl_plans, "elections/{}.csv".format(basename))
 
     count = 1
     for plan in uniq_lgl_plans:
@@ -90,7 +90,7 @@ def main():
                 )
             )
 
-            labs, sizes, colours = distr_plot_params(plan, "pop", "purple")
+            labs, sizes, colours = distr_plot_params(plan, "distr", "purple", flat=True)
             pos = plan.graph["position"]
             nlist = list(plan.nodes)
 
@@ -103,7 +103,7 @@ def main():
                 node_list=nlist,
                 node_color=colours,
                 node_size=sizes,
-                font_size=36,
+                font_size=64,
                 node_shape="o",
             )
 
