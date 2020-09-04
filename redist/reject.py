@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-""" File containing functions to reject districting plans produced by the
-Markov chain """
+""" File containing functions to reject illegal districting plans produced by
+the Markov chain """
 
 from utils import distr_count
 from utils import contig_distr
@@ -10,10 +10,11 @@ def reject_islands(plans):
     """ Accepts a plans list, containing a series of graphs of possible
     districting plans, and rejects any plans where at least one district is
     non-contiguous (i.e. has an island). Returns a list of plans with
-    non-contiguous plans removed"""
+    non-contiguous plans removed """
 
     clean_plans = []
     reject_plans = []
+
     # Get a districting plan (graph) from the list of plans
     for graph in plans:
         # Retrieve the number of districts in the given plan
@@ -38,11 +39,12 @@ def reject_islands(plans):
 def reject_by_pop(plans):
     """ Accepts a plans list, containing a series of graphs of possible
     districting plans, and rejects any plans where the population of any
-    district exceeds: total population * 1/number of districts (+/- 10%).
-    Returns a list of plans with non-contiguous plans removed"""
+    district exceeds: total population * 1/number of districts (+/- 5%).
+    Returns a list of plans with non-contiguous plans removed """
 
     clean_plans = []
     reject_plans = []
+
     # Get a districting plan (graph) from the list of plans
     for graph in plans:
         # Retrieve the number of districts in the given plan
@@ -51,12 +53,10 @@ def reject_by_pop(plans):
         # Create empty list to be populated with booleans for each district
         graph_check = []
 
-        # For each district in the plan, retrieve the nodes of that district
-        # and test each node to confirm that at least one of its neighbors is
-        # from the same district
+        # Iterate through districts in current plan
         for i in range(1, num_distrs + 1):
-            # Create empty list to be populated with booleans for each node in
-            # the current district
+
+            # Assume pop. balance
             distr_check = True
 
             nodes_in_distr = [
@@ -66,6 +66,8 @@ def reject_by_pop(plans):
             for node in nodes_in_distr:
                 total_pop += graph.nodes[node]["pop"]
 
+            # Reject if district pop. is more than +/- 5% of average district
+            # pop (250)
             if total_pop > 263 or total_pop < 237:
                 distr_check = False
 

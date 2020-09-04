@@ -1,46 +1,17 @@
 #!/usr/bin/env python
-""" Drawing functions for network"""
+""" Drawing functions for networkx. Mostly wrappers for the networkx draw()
+function (which is itself a wrapper for matplotlib...) """
 
 # Imports
-import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 from utils import distr_count
 
-# from mpl_toolkits.axes_grid1 import AxesGrid
-
-# Font fiddling
-# import matplotlib.font_manager as font_manager
 
 mpl.rcParams["font.family"] = ["sans-serif"]  # fancy fonts
 mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
-
-
-def draw(graph, fname=None, colour=None):
-    """Function to parse graph and plot it"""
-
-    # Make list of nodes ordered as in the graph
-    nlist = list(graph.nodes)
-
-    # Node positions
-    pos = graph.graph["position"]
-
-    node_size = []
-
-    colour = []
-
-    for node in graph.nodes():
-        colour.append(graph.nodes[node]["distr"])
-
-    nx.draw_networkx_nodes(
-        graph, pos, node_color=colour, node_size=700, with_labels=True
-    )
-    nx.draw_networkx_edges(graph, pos, with_labels=True)
-    nx.draw_networkx_labels(graph, pos)
-    if fname:
-        plt.savefig("imgs/{}.pdf".format(fname))
 
 
 def colour_scale(colour="blue", all=None):
@@ -91,10 +62,11 @@ def colour_scale(colour="blue", all=None):
 
 def single_plot_params(graph, stat, colour="blue", flat=False):
     """ Generate lists of key plotting parameters based off input graph and
-    desired output statistic.  Colour argument accepts single colour scale of
-    'pink', 'green', 'blue', or 'yellow'. Stat must be a statistic embedded in
-    the graph, such as 'pop'. Returns lists of labels, sizes, and colors, in
-    that order """
+    desired output statistic.  Colour argument must match one of the six
+    defined in the colour_scale() function. Stat must be a statistic embedded
+    in the graph, such as 'pop'. Returns lists of labels, sizes, and colors, in
+    that order. 'Flat' parameter forces sizes and colors to be fixed to single
+    value """
 
     # Create ordered node list
     nlist = list(graph.nodes)
@@ -103,7 +75,7 @@ def single_plot_params(graph, stat, colour="blue", flat=False):
     # boundaries between shades in colour scale
     stat_list = []
 
-    # Colour palette and sizes definitions
+    # Colour palette and node draw sizes definitions
     col_pal = colour_scale(colour)
     size_pal = {1: 6000, 2: 7000, 3: 8000, 4: 9000, 5: 10000}
 
@@ -131,6 +103,8 @@ def single_plot_params(graph, stat, colour="blue", flat=False):
         5: (min(stat_list) + 4 * intvl, max(stat_list) + 1),
     }
 
+    # If we aren't making a flat plot, order colour and size by the statistic,
+    # changing based on the computed interval
     if not flat:
         for n in nlist:
             record = graph.nodes[n][stat]
@@ -149,7 +123,8 @@ def distr_plot_params(graph, stat, colour="blue", flat=False):
     desired output statistic.  Colours key first off of districts and
     shades/sizes off a supplied statistic. Stat must be a statistic embedded in
     the graph, such as 'pop'. Returns lists of labels, sizes, and colors, in
-    that order """
+    that order. 'Flat' parameter forces sizes and colors to be fixed to single
+    value """
 
     # Create ordered node list
     nlist = list(graph.nodes)
@@ -187,6 +162,9 @@ def distr_plot_params(graph, stat, colour="blue", flat=False):
         5: (min(stat_list) + 4 * intvl + 1, max(stat_list)),
     }
 
+    # If we're making a flat plot, make all node sizes the same and set
+    # district each district colour to a single value. I.e. not varying based
+    # on the statistic
     if flat:
         for n in nlist:
             record = graph.nodes[n][stat]
@@ -195,6 +173,10 @@ def distr_plot_params(graph, stat, colour="blue", flat=False):
                 if distr == j:
                     col_map.append(col_pal[col_names[j - 1]][3])
                     sizes.append(size_pal[4])
+
+    # If we aren't making a flat plot, order size by the statistic and colour
+    # by district with shade controlled by sthe statistic, changing based on
+    # the computed interval
     else:
         for n in nlist:
             record = graph.nodes[n][stat]
@@ -211,6 +193,7 @@ def distr_plot_params(graph, stat, colour="blue", flat=False):
     return labels, sizes, col_map
 
 
+# Colour remapping function, used for heatmaps of vote margin
 # authors ="Paul H, Horea Christian"
 # https://github.com/TheChymera/chr-helpers
 def remappedColorMap(cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"):
@@ -261,45 +244,3 @@ def remappedColorMap(cmap, start=0, midpoint=0.5, stop=1.0, name="shiftedcmap"):
     plt.register_cmap(cmap=newcmap)
 
     return newcmap
-
-
-# Old colour palette
-# "pink": {
-#     1: "#EE9BBB",
-#     2: "#E26D9A",
-#     3: "#CE477B",
-#     4: "#BC2760",
-#     5: "#951144"},
-# "yellow": {
-#     1: "#FFDFA6",
-#     2: "#FFCF7B",
-#     3: "#EEB653",
-#     4: "#D99A2D",
-#     5: "#AC7514",
-# },
-# "blue": {
-#     1: "#91ABD4",
-#     2: "#6081B6",
-#     3: "#40649D",
-#     4: "#285090",
-#     5: "#173A72"},
-# "green": {
-#     1: "#CCF39E",
-#     2: "#B2EB71",
-#     3: "#96D84B",
-#     4: "#7CC528",
-#     5: "#5C9C12"},
-# "purple": {
-#     1: "#C6C7E1",
-#     2: "#ACAAD1",
-#     3: "#908DC2",
-#     4: "#796EB1",
-#     5: "#64479E",
-# },
-# "orange": {
-#     1: "#FCB97D",
-#     2: "#FD8C51",
-#     3: "#F87D2A",
-#     4: "#E95E0D",
-#     5: "#CC4401",
-# },

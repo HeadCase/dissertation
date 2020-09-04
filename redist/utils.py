@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-""" Source code of utility functions used across the application """
+""" Utility and helpful functions used across the application """
 
 from collections import deque
 
 
 def distr_nodes(distr, graph):
-    """ Accept a district from a graph and parse, producing a list of all
-    nodes in that district """
+    """ Accept a district from a graph and parse, returning a list of all nodes
+    in that district """
 
     nodes_in_distr = [
         node for node, attrs in graph.nodes(data=True) if attrs["distr"] == distr
@@ -29,7 +29,8 @@ def distr_count(graph):
 
 
 def distr_pop(distr, graph):
-    """ Tabulates the number of residents in a district """
+    """ Tabulates the number of residents in a supplied district of a supplied
+    graph """
 
     nodes_in_distr = distr_nodes(distr, graph)
     total_pop = 0
@@ -47,8 +48,10 @@ def contig_distr(distr, graph):
     d_nodes = distr_nodes(distr, graph)
 
     # A proposal plan which eliminates a district will get rejected 100% of the
-    # time due to transition probabilities, but this function is called first.
-    # Hence we return false if a district has no nodes
+    # time due to transition probabilities, but this function is called before
+    # that rejection would occur. As a result, it errors out in this scenario
+    # because the d_nodes list above is empty
+    # no nodes. We fix this with a quick conditional
     if not d_nodes:
         return False
     else:
@@ -58,10 +61,10 @@ def contig_distr(distr, graph):
         # get a list of contiguous nodes in the district
         contig_nodes = bfs(init_node, graph)
 
-        # While the code above initialises with the first node in the district, it
-        # doesn't really matter. If the BFS returns any list of contiguous nodes
-        # that is not exactly the same as the full list of nodes in the district,
-        # the district cannot be contiguous
+        # While the code above initialises with the first node in the district,
+        # it doesn't really matter. If the BFS returns any list of contiguous
+        # nodes that is not exactly the same as the full list of nodes in the
+        # district, the district cannot be contiguous
         if set(d_nodes) == set(contig_nodes):
             return True
         else:
@@ -69,10 +72,11 @@ def contig_distr(distr, graph):
 
 
 def bfs(node, graph):
-    """ Breadth-first search (BFS) for traversing the full set of nodes, from
-    the supplied district, which are contiguous. """
+    """ Breadth-first search (BFS) for traversing the number of connected nodes
+    which share the district assignment of the supplied node. This is used to
+    determine if the district is contiguous. """
 
-    # BFS is implemented using a queue and visit pair of lists. The queue
+    # BFS is implemented using a queue and visited pair of lists. The queue
     # tracks nodes that need to be explored. Once explored, they are removed
     # from the queue and appended to the visited list. A while loop keeps the
     # search going until the queue is empty.
@@ -96,7 +100,8 @@ def bfs(node, graph):
 
 def graph_sig(graph):
     """ Function which takes in a districting graph and returns a numerical
-    signature of that graph """
+    signature of that graph. This signature represents the node-to-district
+    mapping of all nodes in the graph """
 
     # Start with signature as a string for easy concatenation
     sig = ""

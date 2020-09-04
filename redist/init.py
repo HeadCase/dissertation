@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Initialise graph and node attributes """
+""" Initialisation of graph and node attributes """
 
 import networkx as nx
 
@@ -7,7 +7,6 @@ import networkx as nx
 def init_grid():
     """ Initialise graph """
     gname = nx.grid_2d_graph(6, 6)
-    gname.graph["state"] = "Toylandia"
 
     # Starting districts
     dists = {
@@ -191,9 +190,9 @@ def init_grid():
 def init_expanded():
     """ Initialise expanded graph with 60 nodes and six districts. This graph
     seeks to mimic a real state, so while initialised using networkx's 2d
-    graph, nodes are deleted to give a non-grid shape. Districts, vote totals,
-    population, etc. variables are added after the shape and labels are
-    correctly defined for the nodes"""
+    graph, nodes are deleted to give a non-square shape. Districts, vote
+    totals, population, etc. variables are added after the shape and labels are
+    correctly defined for the nodes """
 
     # 2d graph to then delete from to give shape
     graph = nx.grid_2d_graph(11, 9)
@@ -257,7 +256,7 @@ def init_expanded():
 
     graph.remove_nodes_from(rm_list)
 
-    # Sequential integer labels have been messed up by deletion so remap them
+    # Sequential integer labels have been messed up by deletion, so remap them
     mapping = {
         2: 1,
         3: 2,
@@ -339,7 +338,7 @@ def init_expanded():
     }
 
     # Population values for each node. These are used in the Markov chain
-    # acceptance test and for identifying population balanced districts
+    # acceptance ratio and for identifying population balanced districts
     # Ordering of dictionary is based off districting assignments
     pop = {
         1: 19,
@@ -550,6 +549,7 @@ def init_expanded():
         sqre_marg[key] = round(((sqre / value) - (circ / value)) * 100, 1)
         circ_marg[key] = round(((circ / value) - (sqre / value)) * 100, 1)
 
+    # Map variables to keys/values in the network graph
     for key, value in vote_circ.items():
         graph.nodes[key]["vote_circ"] = value
 

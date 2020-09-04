@@ -1,18 +1,18 @@
 #!/usr/bin/env python
-""" Functions for producing logs of chain runs and results and loading them
-back up """
+""" Functions for reading and writing networkx graphs to JSON files for logging
+purposes """
 
-from networkx.readwrite import json_graph
 import json
+from networkx.readwrite import json_graph
 
 
-def to_json(list, fname):
+def to_json(glist, fname):
     """ Accepts a list of networkx graphs and dumps them to file for later
     reading """
 
     count = 1
     master = {}
-    for plan in list:
+    for plan in glist:
         data = json_graph.adjacency_data(plan)
         master["graph-{}".format(count)] = data
         count += 1
@@ -23,7 +23,7 @@ def to_json(list, fname):
 
 def from_json(fname):
     """ Load json file of graph(s) and stuff them into a list of networkx
-    graphs"""
+    graphs """
 
     with open("{}".format(fname)) as f:
         master = json.load(f)

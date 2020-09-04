@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-""" Propose source and candidate nodes for district swap """
+""" Generate proposals for Markov chain """
 
 # Imports
 from random import randint as rint
-
-# from utils import distr_nodes
 
 
 def transistion(graph):
@@ -21,8 +19,8 @@ def transistion(graph):
     for node in nbors:
         nbors_distrs.append(graph.nodes[node]["distr"])
 
-    # Log the current and proposed new districts to computing transition
-    # probabilities
+    # Log the current and proposed new districts for computing transition
+    # probabilities and sending forward to acceptance probability
     cur_distr = graph.nodes[sourceNode]["distr"]
     prop_distr = nbors_distrs[rint(0, len(nbors_distrs) - 1)]
 

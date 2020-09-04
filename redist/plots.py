@@ -17,9 +17,8 @@ import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-# import matplotlib.font_manager as font_manager
-
-mpl.rcParams["font.family"] = ["sans-serif"]  # fancy fonts
+# Fancy font stuff
+mpl.rcParams["font.family"] = ["sans-serif"]
 mpl.rcParams["font.sans-serif"] = ["Source Sans Pro"]
 
 
