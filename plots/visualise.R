@@ -133,6 +133,32 @@ by_plan <- group_by(master, plan_label) %>% count(distr_winner) %>% rename(win_c
 # Label vector
 parties <- c(circle = "Circle Party", square = "Square Party")
 
+
+log <- read_csv(file = '../redist/logs/4mil-const-pt0025-ban-ncontig-variance-fixed-distr1-3.csv')
+score <- arrange(log, desc(pop_curr))
+score <- arrange(log, desc(scoreCurr))
+
+ggplot(score, aes(x=seq(1,500000)))+
+  geom_line(aes(y=scoreCurr), colour = "#6981BA", size=1)+
+  scale_x_continuous(label=label_number())+
+  labs(y='f(phi)', x='Index')+
+  theme(
+    plot.margin = margin(5, 70, 5, 5)
+  )
+ggsave("../../diss/classicthesis/gfx/log-3-desc-score.pdf", width = 6, height = 3) 
+  
+  
+ggplot(score, aes(x=seq(1,500000)))+
+  geom_line(aes(y=pop_curr), colour = "#FA6A34", size = 1)+
+  scale_x_continuous(label=label_number())+
+  labs(y='Population Variance', x='Index')+
+  theme(
+    plot.margin = margin(5, 70, 5, 1)
+  )
+  
+ggsave("../../diss/classicthesis/gfx/log-3-asce-variance.pdf", width = 6, height = 3) 
+#ggsave("../../diss/classicthesis/gfx/log-3-asce-variance.pdf", width = 6.5, height = 5.19) 
+  
 # Exponential function for demostration
 expon <- function(x) {
   exp(-x)
@@ -146,6 +172,38 @@ ggplot(data.frame(x = c(0, 6)), aes(x = x)) +
   )
 #ggsave("../../diss/classicthesis/gfx/exp-graph.pdf", width = 6, height = 4) 
 
+constpt001 <- function(x) {
+  exp(-0.001 * x)
+}
+constpt0025 <- function(x) {
+  exp(-0.0025 * x)
+}
+constpt005 <- function(x) {
+  exp(-0.005 * x)
+}
+constpt01 <- function(x) {
+  exp(-0.01 * x)
+}
+constpt02 <- function(x) {
+  exp(-0.02 * x)
+}
+ggplot(data.frame(x = c(0, 2000)), aes(x = x)) +
+  stat_function(fun = constpt001, aes(colour = "c = 0.001"), size = 1) +
+  stat_function(fun = constpt0025, aes(colour = "c = 0.0025"), size = 1) +
+  stat_function(fun = constpt005, aes(colour  = "c = 0.005"), size = 1) +
+  stat_function(fun = constpt01, aes(colour   = "c = 0.01"), size = 1) +
+  stat_function(fun = constpt02,  aes(colour  = "c = 0.02"), size = 1) +
+  scale_colour_manual(name=NULL, values=c("#E6BC00","#6981BA", "#FA6A34", "#89BF2B", "#DF5EAE"))+
+  labs(y = "f(phi)", x='Population Variance') +
+  theme(
+    plot.margin = margin(5, 50, 5, 5),
+    legend.position = c(0.95, 0.95), 
+    legend.justification = c(0.95, 0.95),
+    legend.margin = margin(5, 5, 5, 5),
+    legend.spacing.y = unit(0, "pt"),
+    legend.title = element_text(margin = margin(1, 0, 3, 0))
+  )
+ggsave("../../diss/classicthesis/gfx/const-comparison.pdf", width = 7, height = 4) 
 
 
 # District total populations
@@ -307,8 +365,12 @@ ggplot(
   labs(x = "Relative Efficiency Gap", y = "Count") +
   xlim(-0.75, 0.75)+
   theme(
+    plot.margin = margin(5, 60, 5, 5),
+    legend.position = c(0.95, 0.95), 
+    legend.justification = c(0.95, 0.95),
     legend.spacing.y = unit(0, "pt"),
-    legend.title = element_text(margin = margin(1, 0, 3, 0))
+    legend.title = element_text(margin = margin(1, 0, 3, 0),
+    )
   )
 ggsave("../../diss/classicthesis/gfx/rela-eff-gap.pdf", width = 7, height = 3.5)
 
