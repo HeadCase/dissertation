@@ -7,7 +7,7 @@ from time import ctime
 from copy import deepcopy as dc
 
 from random import uniform
-from propose import transistion
+from propose import transition
 from score import score_plan
 from score import score_contig
 from score import score_pop
@@ -46,7 +46,7 @@ def chain(init_plan, n, const, fname):
     while i <= n:
 
         # Get a proposal using transition() function
-        trans = transistion(curr_plan)
+        trans = transition(curr_plan)
 
         # Extract relevant bits from the transition() return
         sourceNode = trans["node"]
