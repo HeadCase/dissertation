@@ -5,7 +5,7 @@
 from random import randint as rint
 
 
-def transistion(graph):
+def transition(graph):
     """ Computes transition of a random source node to a new district and
     returns the proposed new district, the node, and its transition
     probabilities in both directions """
