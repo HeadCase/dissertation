@@ -136,12 +136,15 @@ tinker/
 archive/
 backup/
 MCMC_Intro/
+intro/
 WI-shapefiles/
 imgs/
 
 # Misc files
-~$*
+# ~$*
 *.svg
-*.pdf
+# *.pdf
 *.png
 .Rproj.user
+.RData
+.Rhistory
