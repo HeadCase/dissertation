@@ -1,5 +1,6 @@
 ## Dissertation
-Source code for 2019/2020 MSc Data Science and Analytics dissertation
+Source code for 2019/2020 MSc Data Science and Analytics dissertation. See
+[final-report.pdf](final-report.pdf) for full dissertation write-up. 
 
 ## Abstract
 
